@@ -1,0 +1,21 @@
+
+{
+  "name": "Reporte Diário BV",
+  "short_name": "Reporte BV",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#121212",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192x192/121212/ffffff?text=BV",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://via.placeholder.com/512x512/121212/ffffff?text=BV",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
