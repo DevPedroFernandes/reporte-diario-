@@ -1,0 +1,3350 @@
+<html lang="pt-BR"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador Unificado de Reporte - Renovação </title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            margin: 0;
+            padding: 12px;
+            color: #e0e0e0;
+        }
+        .container {
+            max-width: 600px;
+            background: #1e1e1e;
+            padding: 20px;
+            margin: 0 auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            border: 1px solid #2d2d2d;
+        }
+        h2 {
+            text-align: center;
+            color: #ffffff;
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+        .toggle-container {
+            display: flex;
+            background: #252525;
+            padding: 4px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #3d3d3d;
+        }
+        .toggle-btn {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            font-weight: bold;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #888;
+        }
+        .toggle-btn.active {
+            background: #ffffff;
+            color: #121212;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .section-title {
+            background: #2a2a2a;
+            padding: 6px 10px;
+            font-weight: bold;
+            margin-top: 14px;
+            margin-bottom: 6px;
+            border-left: 4px solid #ffffff;
+            color: #ffffff;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        label {
+            display: block;
+            margin-top: 12px;
+            font-weight: 600;
+            font-size: 13px;
+            color: #b0b0b0;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            border: 1px solid #3d3d3d;
+            border-radius: 8px;
+            background-color: #252525;
+            color: #ffffff;
+            font-size: 15px;
+            transition: border-color 0.2s, background-color 0.2s;
+            user-select: text;
+            -webkit-user-select: text;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #ffffff;
+            background-color: #2a2a2a;
+        }
+        .obrasoft-checklist-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 13px;
+            color: #e0e0e0;
+            cursor: pointer;
+            width: 100%;
+            line-height: 1.35;
+        }
+        .obrasoft-checklist-label input.obra-checkbox {
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            margin-top: 2px;
+            padding: 0;
+            flex-shrink: 0;
+            cursor: pointer;
+            user-select: auto;
+            -webkit-user-select: auto;
+            accent-color: #2f7cff;
+        }
+        .obrasoft-checklist-label span {
+            flex: 1;
+        }
+        .hidden-field {
+            display: none;
+            background: #262626;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            border: 1px dashed #444;
+        }
+        .row {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: separate;
+            border-spacing: 8px 0;
+            margin-left: -8px;
+            margin-right: -8px;
+        }
+        .col {
+            display: table-cell;
+            vertical-align: top;
+        }
+        .dynamic-container {
+            margin-top: 4px;
+        }
+        .dynamic-item {
+            display: table;
+            width: 100%;
+            margin-bottom: 8px;
+            background: #232323;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+        .dynamic-input-cell {
+            display: table-cell;
+            vertical-align: top;
+            width: 85%;
+        }
+        .dynamic-btn-cell {
+            display: table-cell;
+            vertical-align: middle;
+            width: 15%;
+            text-align: right;
+            padding-left: 8px;
+        }
+        .btn-remove {
+            background-color: #cf222e;
+            color: white;
+            padding: 12px 5px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            font-size: 15px;
+        }
+        .btn-add {
+            background-color: #2f7cff;
+            color: white;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            margin-top: 6px;
+            width: 100%;
+            text-align: center;
+        }
+        .btn-group {
+            margin-top: 30px;
+        }
+        button {
+            width: 100%;
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .btn-whatsapp {
+            background-color: #25d366;
+            color: white;
+            box-shadow: 0 4px 12px rgba(37,211,102,0.2);
+        }
+        .btn-copy {
+            background-color: #ffffff;
+            color: #121212;
+            box-shadow: 0 4px 12px rgba(255,255,255,0.1);
+        }
+        .alert-box {
+            display: none;
+            background-color: #1e4620;
+            color: #a3cfbb;
+            border: 1px solid #2e6930;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .estaca-row {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: separate;
+            border-spacing: 6px 0;
+            margin-top: 4px;
+        }
+        .estaca-col {
+            display: table-cell;
+            vertical-align: top;
+        }
+        .calc-preview {
+            background: #1a1a1a;
+            padding: 6px 10px;
+            border-radius: 4px;
+            margin-top: 6px;
+            font-size: 12px;
+            color: #4cd137;
+            font-weight: bold;
+            border-left: 3px solid #4cd137;
+        }
+        @media (max-width: 480px) {
+            body { padding: 6px; }
+            .container { padding: 14px; border-radius: 8px; }
+            h2 { font-size: 18px; }
+            input, select, textarea, button { font-size: 16px; padding: 12px; }
+        }
+    
+        .estaca-row {
+            display: flex !important;
+            gap: 4px !important;
+            align-items: center !important;
+            margin-top: 8px !important;
+        }
+        .calc-preview, .t-calc-preview {
+            background: #1a1a1a !important;
+            padding: 6px 10px !important;
+            border-radius: 4px !important;
+            margin-top: 6px !important;
+            font-size: 12px !important;
+            color: #4cd137 !important;
+            font-weight: bold !important;
+            border-left: 3px solid #4cd137 !important;
+            display: block !important;
+        }
+
+        /* ===== Botão Salvar ===== */
+        .btn-save {
+            background-color: #f5a623;
+            color: #121212;
+            box-shadow: 0 4px 12px rgba(245,166,35,0.2);
+        }
+
+        /* ===== Navegação entre Gerador e Histórico ===== */
+        .view-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .view-nav-btn {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            background: #252525;
+            border: 1px solid #3d3d3d;
+            color: #888;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .view-nav-btn.active {
+            background: #2f7cff;
+            color: #fff;
+            border-color: #2f7cff;
+        }
+        .hist-badge {
+            display: inline-block;
+            min-width: 18px;
+            padding: 1px 6px;
+            border-radius: 10px;
+            background: rgba(0,0,0,0.3);
+            font-size: 11px;
+            margin-left: 4px;
+        }
+
+        /* ===== View Histórico ===== */
+        .hist-toolbar { margin-bottom: 14px; }
+        .hist-vazio {
+            text-align: center;
+            color: #777;
+            padding: 40px 16px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .hist-grupo { margin-bottom: 18px; }
+        .hist-grupo-titulo {
+            font-weight: bold;
+            color: #fff;
+            font-size: 14px;
+            padding: 8px 10px;
+            background: #2a2a2a;
+            border-left: 4px solid #2f7cff;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+        .hist-grupo-count {
+            background: #2f7cff;
+            color: #fff;
+            border-radius: 10px;
+            padding: 1px 8px;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        .hist-card {
+            background: #232323;
+            border: 1px solid #333;
+            border-radius: 8px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        .hist-card-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            cursor: pointer;
+            gap: 8px;
+        }
+        .hist-card-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            font-size: 13px;
+        }
+        .hist-card-data { color: #e0e0e0; font-weight: 600; }
+        .hist-card-prog { color: #888; font-size: 12px; }
+        .hist-badge-jornada {
+            font-size: 11px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .hist-badge-jornada.ini { background: #3a2f00; color: #f5c542; }
+        .hist-badge-jornada.term { background: #1a2540; color: #6ea8ff; }
+        .hist-card-seta { color: #888; transition: transform 0.2s; font-size: 12px; flex-shrink: 0; }
+        .hist-card.aberto .hist-card-seta { transform: rotate(180deg); }
+        .hist-card-body { display: none; padding: 0 12px 12px; }
+        .hist-card.aberto .hist-card-body { display: block; }
+        .hist-card-meta { color: #777; font-size: 11px; margin-bottom: 8px; }
+        .hist-texto {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 12px;
+            color: #d0d0d0;
+            font-size: 12.5px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 320px;
+            overflow-y: auto;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            user-select: text;
+            -webkit-user-select: text;
+        }
+        .hist-card-acoes {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .hist-card-acoes button {
+            margin: 0;
+            padding: 12px;
+            font-size: 13px;
+            flex: 1;
+            min-width: 120px;
+        }
+        .btn-hist-copy { background: #25d366; color: #fff; }
+        .btn-hist-wa { background: #2f7cff; color: #fff; flex: 0 0 auto !important; min-width: 90px !important; }
+        .btn-hist-del { background: #cf222e; color: #fff; flex: 0 0 auto !important; min-width: 54px !important; }
+
+        /* ===== Botão de alternância de tema ===== */
+        .tema-header {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 6px;
+        }
+        .tema-toggle {
+            width: auto;
+            margin: 0;
+            padding: 7px 14px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 20px;
+            background: #2a2a2a;
+            color: #e0e0e0;
+            border: 1px solid #444;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        /* ============================================================
+           MODO DIA (tema claro de alto contraste para uso sob sol forte)
+           Ativado quando o <body> recebe a classe .tema-dia
+           ============================================================ */
+        body.tema-dia { background-color: #ffffff; color: #000000; }
+        body.tema-dia .container {
+            background: #ffffff;
+            border: 2px solid #000000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        body.tema-dia h2,
+        body.tema-dia .section-title,
+        body.tema-dia label { color: #000000 !important; }
+        body.tema-dia .subtitle { color: #333333; }
+        body.tema-dia .section-title {
+            background: #ededed;
+            border-left: 4px solid #000000;
+        }
+
+        /* Campos com alto contraste: fundo branco, borda preta 2px */
+        body.tema-dia input,
+        body.tema-dia select,
+        body.tema-dia textarea {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            border: 2px solid #000000 !important;
+        }
+        body.tema-dia input:focus,
+        body.tema-dia select:focus,
+        body.tema-dia textarea:focus {
+            background-color: #ffffff !important;
+            border-color: #2f7cff !important;
+        }
+        body.tema-dia input::placeholder,
+        body.tema-dia textarea::placeholder { color: #666666; }
+
+        /* Seletores de jornada e de views */
+        body.tema-dia .toggle-container { background: #f0f0f0; border: 1px solid #000; }
+        body.tema-dia .toggle-btn { color: #000; }
+        body.tema-dia .toggle-btn.active { background: #000000; color: #ffffff; }
+        body.tema-dia .view-nav-btn { background: #f0f0f0; color: #000; border: 2px solid #000; }
+        body.tema-dia .view-nav-btn.active { background: #2f7cff; color: #fff; border-color: #2f7cff; }
+
+        /* Blocos auxiliares e itens dinâmicos */
+        body.tema-dia .hidden-field { background: #f5f5f5; border: 1px dashed #000; }
+        body.tema-dia .dynamic-item { background: #ffffff !important; border: 2px solid #000 !important; }
+        body.tema-dia #obrasoftChecklistContainer { background: #f5f5f5 !important; border: 2px solid #000 !important; }
+        body.tema-dia .obrasoft-checklist-label,
+        body.tema-dia .obrasoft-checklist-label span { color: #000 !important; }
+        body.tema-dia .dynamic-item span { color: #333 !important; }
+        body.tema-dia .calc-preview,
+        body.tema-dia .t-calc-preview,
+        body.tema-dia .t-conexao-estaca-preview {
+            background: #eafbe7 !important;
+            color: #137a1f !important;
+            border-left: 3px solid #137a1f !important;
+        }
+
+        /* Histórico no Modo Dia */
+        body.tema-dia .hist-grupo-titulo { background: #ededed; color: #000; border-left: 4px solid #2f7cff; }
+        body.tema-dia .hist-card { background: #ffffff; border: 2px solid #000; }
+        body.tema-dia .hist-card-data { color: #000; }
+        body.tema-dia .hist-card-prog { color: #444; }
+        body.tema-dia .hist-card-meta { color: #555; }
+        body.tema-dia .hist-card-seta { color: #000; }
+        body.tema-dia .hist-texto { background: #f7f7f7; color: #000; border: 1px solid #000; }
+        body.tema-dia .hist-vazio { color: #444; }
+        body.tema-dia .hist-badge-jornada.ini { background: #fff3cd; color: #8a6d00; }
+        body.tema-dia .hist-badge-jornada.term { background: #d9e8ff; color: #1b4ba3; }
+
+        /* Botão de tema no Modo Dia */
+        body.tema-dia .tema-toggle { background: #000000; color: #ffffff; border: 1px solid #000000; }
+
+        /* ===== Marcação de campo obrigatório ===== */
+        .obrigatorio {
+            color: #ff4d4d;
+            font-weight: bold;
+            margin-left: 2px;
+        }
+        body.tema-dia .obrigatorio { color: #d40000; }
+
+        /* ===== Modal de campos obrigatórios ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.65);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .modal-box {
+            background: #1e1e1e;
+            border: 1px solid #3d3d3d;
+            border-radius: 14px;
+            padding: 24px 20px;
+            max-width: 360px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            animation: modalPop 0.18s ease-out;
+        }
+        @keyframes modalPop {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .modal-icon { font-size: 42px; margin-bottom: 8px; line-height: 1; }
+        .modal-titulo { font-size: 18px; font-weight: bold; color: #ffffff; margin-bottom: 8px; }
+        .modal-texto { font-size: 14px; color: #c0c0c0; line-height: 1.55; margin-bottom: 18px; }
+        .modal-texto b { color: #ffd24d; }
+        .modal-btn {
+            background: #2f7cff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+            margin: 0;
+        }
+        body.tema-dia .modal-box { background: #ffffff; border: 2px solid #000000; }
+        body.tema-dia .modal-titulo { color: #000000; }
+        body.tema-dia .modal-texto { color: #333333; }
+        body.tema-dia .modal-texto b { color: #b35900; }
+
+        /* ===== Minhas Obras (cadastro local) ===== */
+        .view-nav-btn { font-size: 12px; padding: 9px 8px; }
+        .obras-ajuda { font-size: 12px; color: #888; margin: 0 0 14px; line-height: 1.5; }
+        label.sub { font-size: 11px !important; color: #888 !important; margin-top: 8px; }
+        .obra-card {
+            background: #232323;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 8px;
+        }
+        .obra-card-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .obra-card-nome { font-weight: bold; color: #fff; font-size: 14px; }
+        .btn-obra-del {
+            background: #cf222e;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            width: auto;
+            margin: 0;
+            flex-shrink: 0;
+        }
+        .obra-card-corpo { font-size: 12.5px; color: #c0c0c0; line-height: 1.6; }
+        .obra-card-corpo b { color: #e0e0e0; }
+
+        body.tema-dia .obras-ajuda { color: #555; }
+        body.tema-dia label.sub { color: #555 !important; }
+        body.tema-dia .obra-card { background: #ffffff; border: 2px solid #000; }
+        body.tema-dia .obra-card-nome { color: #000; }
+        body.tema-dia .obra-card-corpo { color: #333; }
+        body.tema-dia .obra-card-corpo b { color: #000; }
+
+        /* ===== Medição de Vala (split inputs) ===== */
+        /* Área da vala mais compacta */
+        #valaContainer { margin-top: 8px !important; }
+        #valaContainer label { margin-top: 8px; }
+        #valaContainer .row { margin-top: 0; }
+        #valaList { margin-top: 6px !important; }
+        .split-input {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .split-input input {
+            margin-top: 0;
+            text-align: center;
+        }
+        .split-input .split-int { flex: 2; }
+        .split-input .split-dec { flex: 1; }
+        .split-virgula {
+            font-size: 22px;
+            font-weight: bold;
+            color: #888;
+            line-height: 1;
+            padding: 0 2px;
+        }
+        .vala-alerta {
+            color: #ff6b6b;
+            font-size: 13px;
+            font-weight: bold;
+            margin-top: 6px;
+        }
+        .vala-linha-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            background: #232323;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 7px 10px;
+            margin-bottom: 5px;
+        }
+        .vala-linha-texto {
+            font-size: 13px;
+            color: #e0e0e0;
+            flex: 1;
+            word-break: break-word;
+            line-height: 1.3;
+        }
+        .vala-linha-x {
+            width: auto !important;
+            padding: 6px 11px !important;
+            margin: 0 !important;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+        body.tema-dia .split-virgula { color: #000; }
+        body.tema-dia .vala-linha-item { background: #fff; border: 2px solid #000; }
+        body.tema-dia .vala-linha-texto { color: #000; }
+
+    </style>
+
+  <link rel="manifest" href="manifest.json">
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
+</script>
+</head>
+<body>
+<script>try{if((localStorage.getItem('temaBV')||'noite')==='dia'){document.body.classList.add('tema-dia');}}catch(e){}</script>
+
+<div class="container">
+    <div class="tema-header">
+        <button type="button" id="btnTema" class="tema-toggle" onclick="alternarTema()">☀️ Modo Dia</button>
+    </div>
+    <h2>📋 GERADOR DE REPORTE DIÁRIO</h2>
+    <div class="subtitle"> Renovação - Aplicativo Unificado</div>
+
+    <!-- Navegação entre Gerador e Histórico -->
+    <div class="view-nav">
+        <div id="navGerador" class="view-nav-btn active" onclick="mostrarView('GERADOR')">📝 Gerador</div>
+        <div id="navObras" class="view-nav-btn" onclick="mostrarView('OBRAS')">🏗️ Obras <span id="obrasCount" class="hist-badge">0</span></div>
+        <div id="navHistorico" class="view-nav-btn" onclick="mostrarView('HISTORICO')">🗂️ Histórico <span id="histCount" class="hist-badge">0</span></div>
+    </div>
+
+    <div id="viewGerador">
+    <!-- Seletor Principal de Jornada -->
+    <div class="toggle-container">
+        <div id="btnJornadaInicio" class="toggle-btn active" onclick="mudarTipoJornada('INICIO')">🌅 INÍCIO DE JORNADA</div>
+        <div id="btnJornadaTermino" class="toggle-btn" onclick="mudarTipoJornada('TERMINO')">🌌 TÉRMINO DE JORNADA</div>
+    </div>
+
+    <form id="rdoForm" onsubmit="return false;">
+        <div class="section-title">Identificação Básica</div>
+        
+        <label for="programa">Selecione o Programa:</label>
+        <select id="programa" onchange="alternarPrograma()" required="">
+            <option value="ESTAÇÕES">ESTAÇÕES</option>
+            <option value="VÁLVULAS DE PE">VÁLVULAS DE PE</option>
+            <option value="VÁLVULAS DE ESPAÇO CONFINADO">VÁLVULAS DE ESPAÇO CONFINADO</option>
+            <option value="VÁLVULAS NÃO OPERACIONAIS">VÁLVULAS NÃO OPERACIONAIS</option>
+            <option value="CRC NUVEM">CRC NUVEM</option>
+            <option value="SETORIZAÇÃO" selected="">SETORIZAÇÃO</option>
+            <option value="RENOVAÇÃO DE REDES DE AÇO">RENOVAÇÃO DE REDES DE AÇO</option>
+        </select>
+
+        <div id="blocoSelecaoProjeto" style="display: block;">
+            <label for="projeto">Projeto:<span class="obrigatorio">*</span></label>
+            <select id="projeto" onchange="atualizarDadosProjeto()"><option value="">-- Selecione o Projeto --</option><option value="SETORIZAÇÃO DIADEMA - PIRAPORINHA" data-index="2">SETORIZAÇÃO DIADEMA - PIRAPORINHA</option><option value="MANUAL">PREENCHER MANUALMENTE</option></select>
+        </div>
+
+        <div id="campoProjetoManual" class="hidden-field">
+            <label for="projetoManual">Nome do Projeto Manual:<span class="obrigatorio">*</span></label>
+            <input type="text" id="projetoManual" placeholder="Digite o projeto customizado">
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <label for="data">Data:<span class="obrigatorio">*</span></label>
+                <input type="date" id="data" required="">
+            </div>
+            <div class="col">
+                <label for="horaJornada" id="lblHoraJornada">Hora início:<span class="obrigatorio">*</span></label>
+                <input type="time" id="horaJornada" required="">
+            </div>
+        </div>
+
+        <div class="section-title">DADOS TÉCNICOS</div>
+        
+        <div class="row">
+            <div class="col">
+                    <label for="contratada">Contratada:<span class="obrigatorio">*</span></label>
+                <select id="contratada">
+                    <option value="Sialdrill">Sialdrill</option>
+                    <option value="Concrejato">Concrejato</option>
+                    <option value="PLANEMONT">PLANEMONT</option>
+                </select>
+            </div>
+            <div class="col">
+                    <label for="supervisor">Supervisor:<span class="obrigatorio">*</span></label>
+                <input type="text" id="supervisor" placeholder="Nome do supervisor">
+            </div>
+        </div>
+
+        <!-- Frentes padrão (Somem no CRC NUVEM) -->
+        <div id="containerCamposPadrao" style="display: block;">
+            <div class="row">
+                <div class="col">
+                    <label for="material">Material:<span class="obrigatorio">*</span></label>
+                    <select id="material">
+                        <option value="Aço/PE">Aço/PE</option>
+                        <option value="Aço">Aço</option>
+                        <option value="PE">PE</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label for="diametro">Diâmetro:<span class="obrigatorio">*</span></label>
+                    <input type="text" id="diametro" placeholder="Ex: 10">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label for="pressao">Pressão:</label>
+                    <input type="text" id="pressao" placeholder="Ex: 4 bar">
+                </div>
+                <div class="col">
+                    <label for="tu">Código TU:<span class="obrigatorio">*</span></label>
+                    <input type="text" id="tu" placeholder="Número da TU">
+                </div>
+            </div>
+            <label id="labelEndereco" for="endereco">Endereço:</label>
+            <input type="text" id="endereco" placeholder="Endereço da obra">
+        </div>
+
+        <!-- Exclusivo CRC NUVEM -->
+        <div id="seccionCrcCidade" style="display: none;">
+            <label for="cidadeCrc">Cidade:<span class="obrigatorio">*</span></label>
+            <input type="text" id="cidadeCrc" placeholder="Ex: Taubaté - SP">
+        </div>
+
+        <!-- BLOCO DE AUTORIZAÇÃO TOTALMENTE UNIFICADO PARA TODOS OS PROGRAMAS -->
+        <div id="blocoAutorizacaoUnificado">
+            <div class="row">
+                <div class="col">
+                    <label for="authCrcDataIni">Autorização (Data Início):</label>
+                    <input type="date" id="authCrcDataIni">
+                </div>
+                <div class="col">
+                    <label for="authCrcDataFim">Autorização (Data Fim):</label>
+                    <input type="date" id="authCrcDataFim">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label for="authCrcHoraIni">Autorização (Hora Início):</label>
+                    <input type="time" id="authCrcHoraIni">
+                </div>
+                <div class="col">
+                    <label for="authCrcHoraFim">Autorização (Hora Fim):</label>
+                    <input type="time" id="authCrcHoraFim">
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 6px;">
+            <label for="poccPocs">POCC/POCS:</label>
+            <input type="text" id="poccPocs" placeholder="Ex: 134565" oninput="avaliarVisibilidadePoccAtendentes()">
+        </div>
+
+        <!-- EXCLUSIVO DE INÍCIO DE JORNADA (Chegada no local e 2MPMS) -->
+        <div id="containerInicioLocal" class="row" style="display: table;">
+            <div class="col">
+                <label for="chegadaLocal">Chegada no local:<span class="obrigatorio">*</span></label>
+                <input type="time" id="chegadaLocal">
+            </div>
+            <div class="col">
+                <label for="mpms">Preenchido 2MPMS?:</label>
+                <select id="mpms">
+                    <option value="SIM" selected="">SIM</option>
+                    <option value="NÃO">NÃO</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Ocultado dinamicamente caso POCC/POCS esteja vazio (exceto para CRC NUVEM) -->
+        <div id="containerPoccPadrao" style="display: none;">
+            <div class="row">
+                <div class="col">
+                    <label for="atendenteInicio">Atendente Início:</label>
+                    <input type="text" id="atendenteInicio" placeholder="Ex: Solizeto">
+                </div>
+                <div class="col">
+                    <label for="horaPoccInicio">Horário Início:</label>
+                    <input type="time" id="horaPoccInicio">
+                </div>
+            </div>
+            <!-- Aparece apenas em Término de Jornada -->
+            <div id="rowPoccTermino" class="row" style="display: none;">
+                <div class="col">
+                    <label for="atendenteTermino">Atendente Término:</label>
+                    <input type="text" id="atendenteTermino" placeholder="Ex: Ana">
+                </div>
+                <div class="col">
+                    <label for="horaPoccTermino">Horário Término:</label>
+                    <input type="time" id="horaPoccTermino">
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">CDI &amp; ROTOGRAMA</div>
+
+        <div class="row">
+            <div class="col" style="width: 100%;">
+                <label for="temaCdi">Tema CDI:</label>
+                <input type="text" id="temaCdi" placeholder="Ex: Cuidado com as mãos">
+            </div>
+            <div class="col" style="width: 100%;">
+                <label for="hospital">Hospital Contingência:</label>
+                <input type="text" id="hospital" placeholder="Ex: UBS Mais Independência">
+            </div>
+        </div>
+
+        <div class="section-title">DADOS DO AUDITOR BV</div>
+
+        <div class="row">
+            <div class="col">
+                <label for="auditor">Auditor (Nome):</label>
+                <input type="text" id="auditor" placeholder="Ex: Lucas">
+            </div>
+            <div class="col">
+                <label for="periodo">Período:</label>
+                <select id="periodo">
+                    <option value="Diurno" selected="">Diurno</option>
+                    <option value="Noturno">Noturno</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <label for="veiculo">Veículo:</label>
+                <input type="text" id="veiculo" placeholder="Ex: Kwid">
+            </div>
+            <div class="col">
+                <label for="placa">Placa:</label>
+                <input type="text" id="placa" placeholder="Ex: TAM7J23">
+            </div>
+        </div>
+
+        <!-- SEÇÕES DINÂMICAS DE PROGRAMAÇÃO / EXECUÇÃO (DEPENDEM DO MODO DE JORNADA) -->
+        
+        <!-- MODO: INÍCIO DE JORNADA (PROGRAMAÇÃO PADRÃO) -->
+        <div id="containerProgramacaoInicio" style="display: block;">
+            <div class="section-title">Atividades Programadas</div>
+            <div id="atividadesListInicio" class="dynamic-container"><div style="display: table; width: 100%; margin-bottom: 6px;">
+            <div style="display: table-cell; width: 85%; vertical-align: middle;"><textarea class="atv-inicio-input" rows="1" placeholder="Ex: Instalação de placas..." oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px';" style="resize: none; overflow-y: hidden; min-height: 42px; display: block;"></textarea></div>
+            <div style="display: table-cell; width: 15%; text-align: right; padding-left: 8px; vertical-align: middle;"><button type="button" class="btn-remove" style="padding: 11px 5px;" onclick="this.parentElement.parentElement.remove()">X</button></div>
+        </div></div>
+            <button type="button" class="btn-add" onclick="adicionarAtividadeLivreInicio()">➕ Adicionar Item na Programação</button>
+        </div>
+
+        <!-- MODO: INÍCIO DE JORNADA (CRCs PLANEJADOS - CRC NUVEM) -->
+        <div id="seccionCrcPlanejados" style="display: none; margin-top: 20px;">
+            <div class="section-title" style="border-left-color: #2f7cff;">CRCs Planejados para Execução</div>
+            <div id="crcListPlanejados" class="dynamic-container"></div>
+            <button type="button" class="btn-add" style="background-color: #2f7cff; width: 100%;" onclick="adicionarCrcPlanejadoItem()">➕ Adicionar Novo CRC Planejado</button>
+        </div>
+
+        <!-- MODO: TÉRMINO DE JORNADA (CRCs RENOVADOS - CRC NUVEM) -->
+        <div id="seccionCrcRenovados" style="display: none; margin-top: 20px;">
+            <div class="section-title" style="border-left-color: #25d366;">CRCs Renovados</div>
+            <div id="crcList" class="dynamic-container"></div>
+            <button type="button" class="btn-add" style="background-color: #25d366; width: 100%;" onclick="adicionarCrcItem()">➕ Adicionar Nova CRC Renovada</button>
+        </div>
+
+        <!-- INSPEÇÃO OBRASOFT (Término de Jornada — padrão e CRC NUVEM) -->
+        <div id="containerObrasoftTermino" style="display: none; margin-top: 20px;">
+            <div class="section-title">Inspeção Obrasoft</div>
+            <label style="margin-top: 0; display: block; font-weight: bold; color: #fff;">Foi realizado inspeção Obrasoft?</label>
+            <select id="realizouObrasoft" onchange="toggleObrasoftSeccion()">
+                <option value="NAO" selected="">Não</option>
+                <option value="SIM">Sim</option>
+            </select>
+
+            <div id="seccionObrasoftCompleta" style="display: none;">
+                <label style="margin-top: 10px; display: block; font-weight: bold; color: #aaa; font-size: 13px; margin-bottom: 5px;">Selecione os itens inspecionados:</label>
+                <div id="obrasoftChecklistContainer" style="background: #252525; padding: 12px; border-radius: 8px; border: 1px solid #333; margin-bottom: 10px; max-height: 360px; overflow-y: auto;">
+            <label class="obrasoft-checklist-label">
+                <input type="checkbox" class="obra-checkbox" value="Gerenciamento BV - SSM - Check-list Veicular">
+                <span>Gerenciamento BV - SSM - Check-list Veicular</span>
+            </label>
+        
+            <label class="obrasoft-checklist-label">
+                <input type="checkbox" class="obra-checkbox" value="Gerenciamento BV - SSM - Documentação e Área de vivência">
+                <span>Gerenciamento BV - SSM - Documentação e Área de vivência</span>
+            </label>
+        
+            <label class="obrasoft-checklist-label">
+                <input type="checkbox" class="obra-checkbox" value="Gerenciamento BV - SSM - Furo Direcional">
+                <span>Gerenciamento BV - SSM - Furo Direcional</span>
+            </label>
+        
+            <label class="obrasoft-checklist-label">
+                <input type="checkbox" class="obra-checkbox" value="Gerenciamento BV - SSM - Içamento e Movimentação de carga">
+                <span>Gerenciamento BV - SSM - Içamento e Movimentação de carga</span>
+            </label>
+        
+            <label class="obrasoft-checklist-label">
+                <input type="checkbox" class="obra-checkbox" value="Gerenciamento BV - SSM - Sinalização de obras">
+                <span>Gerenciamento BV - SSM - Sinalização de obras</span>
+            </label>
+        
+            <label class="obrasoft-checklist-label">
+                <input type="checkbox" class="obra-checkbox" value="Gerenciamento BV - SSM - Solda em Carga">
+                <span>Gerenciamento BV - SSM - Solda em Carga</span>
+            </label>
+        
+            <label class="obrasoft-checklist-label">
+                <input type="checkbox" class="obra-checkbox" value="Gerenciamento BV - SSM - Trabalho em vala">
+                <span>Gerenciamento BV - SSM - Trabalho em vala</span>
+            </label>
+        
+            <label class="obrasoft-checklist-label">
+                <input type="checkbox" class="obra-checkbox" value="Gerenciamento BV - SSM - Uso de Equipamentos e Ferramentas">
+                <span>Gerenciamento BV - SSM - Uso de Equipamentos e Ferramentas</span>
+            </label>
+        
+            <label class="obrasoft-checklist-label">
+                <input type="checkbox" class="obra-checkbox" value="Gerenciamento BV - Solda de Eletrofusão">
+                <span>Gerenciamento BV - Solda de Eletrofusão</span>
+            </label>
+        
+            <label class="obrasoft-checklist-label">
+                <input type="checkbox" class="obra-checkbox" value="Gerenciamento BV - Solda de Topo - Termofusão">
+                <span>Gerenciamento BV - Solda de Topo - Termofusão</span>
+            </label>
+        
+            <label class="obrasoft-checklist-label">
+                <input type="checkbox" class="obra-checkbox" value="Gerenciamento BV - Solda em Aço - NÃO EM CARGA">
+                <span>Gerenciamento BV - Solda em Aço - NÃO EM CARGA</span>
+            </label>
+        
+            <label class="obrasoft-checklist-label">
+                <input type="checkbox" class="obra-checkbox" value="Gerenciamento BV - Teste Hidrostático em redes e ramais em PE">
+                <span>Gerenciamento BV - Teste Hidrostático em redes e ramais em PE</span>
+            </label>
+        
+            <label class="obrasoft-checklist-label">
+                <input type="checkbox" class="obra-checkbox" value="Gerenciamento BV - Teste Pneumático em redes e ramais em PE">
+                <span>Gerenciamento BV - Teste Pneumático em redes e ramais em PE</span>
+            </label>
+        
+            <label class="obrasoft-checklist-label">
+                <input type="checkbox" class="obra-checkbox" value="Gerenciamento BV - Teste de pressão em Redes e Ramais Aço">
+                <span>Gerenciamento BV - Teste de pressão em Redes e Ramais Aço</span>
+            </label>
+        </div>
+                <div id="obrasoftList" class="dynamic-container"></div>
+                <button type="button" class="btn-add" onclick="adicionarFechamentoItem('obrasoftList', 'Escreva um item customizado aqui...', 'obra-input')">➕ Adicionar Item Manual / Customizado</button>
+            </div>
+        </div>
+
+            <!-- DETALHAMENTO/AVANÇO: apenas no Término de Jornada (oculto no Início e em todo o CRC NUVEM) -->
+            <div id="containerAtividadesPadrao" style="display: none;">
+            <div class="section-title">Detalhamento das Atividades</div>
+            <div id="atividadesList" class="dynamic-container"><div style="display: table; width: 100%; margin-bottom: 6px;">
+            <div style="display: table-cell; width: 85%; vertical-align: middle;"><textarea class="atv-input" rows="1" placeholder="Ex: Execução de vala..." oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px';" style="resize: none; overflow-y: hidden; min-height: 42px; display: block;"></textarea></div>
+            <div style="display: table-cell; width: 15%; text-align: right; padding-left: 8px; vertical-align: middle;"><button type="button" class="btn-remove" style="padding: 11px 5px;" onclick="this.parentElement.parentElement.remove()">X</button></div>
+        </div></div>
+            <button type="button" class="btn-add" onclick="adicionarAtividadeLivre()">➕ Adicionar Item na Atividade</button>
+
+            <div class="section-title">Avanço Físico / Medição</div>
+            <label style="font-weight: bold; color: #ffffff;">Houve abertura, reaterro ou recomposição asfáltica de vala?</label>
+            <select id="hasVala" onchange="toggleVala()">
+                <option value="NÃO" selected="">NÃO</option>
+                <option value="SIM">SIM</option>
+            </select>
+
+            <div id="valaContainer" style="display: none; margin-top: 12px;">
+                <label for="valaTipo">Tipo de Atividade<span class="obrigatorio">*</span></label>
+                <select id="valaTipo" onchange="toggleValaProfundidade()">
+                    <option value="Abertura de Vala">Abertura de Vala</option>
+                    <option value="Reaterro de Vala">Reaterro de Vala</option>
+                    <option value="Recomposição Asfáltica">Recomposição Asfáltica</option>
+                </select>
+
+                <label>Estaca (E)</label>
+                <div class="split-input">
+                    <input type="text" inputmode="numeric" pattern="[0-9]*" id="valaEstacaInt" class="split-int" placeholder="Estaca" oninput="valaAutoTab(this,'valaEstacaDec',3)">
+                    <span class="split-virgula">,</span>
+                    <input type="text" inputmode="numeric" pattern="[0-9]*" id="valaEstacaDec" class="split-dec" placeholder="00" oninput="valaDecimal(this)">
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <label>Largura (m)</label>
+                        <div class="split-input">
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" id="valaLarguraInt" class="split-int" placeholder="0" oninput="valaAutoTab(this,'valaLarguraDec',2)">
+                            <span class="split-virgula">,</span>
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" id="valaLarguraDec" class="split-dec" placeholder="00" oninput="valaDecimal(this)">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label>Comprimento (m)</label>
+                        <div class="split-input">
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" id="valaComprimentoInt" class="split-int" placeholder="0" oninput="valaAutoTab(this,'valaComprimentoDec',3)">
+                            <span class="split-virgula">,</span>
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" id="valaComprimentoDec" class="split-dec" placeholder="00" oninput="valaDecimal(this)">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="valaProfundidadeWrap">
+                    <label>Profundidade (m)</label>
+                    <div class="split-input">
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" id="valaProfundidadeInt" class="split-int" placeholder="0" oninput="valaAutoTab(this,'valaProfundidadeDec',2)">
+                        <span class="split-virgula">,</span>
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" id="valaProfundidadeDec" class="split-dec" placeholder="00" oninput="valaDecimal(this)">
+                    </div>
+                </div>
+
+                <button type="button" class="btn-add" onclick="adicionarVala()">➕ Adicionar Vala</button>
+                <div id="valaAlerta" class="vala-alerta" style="display: none;"></div>
+                <div id="valaList" class="dynamic-container" style="margin-top: 10px;"></div>
+            </div>
+
+            <!-- Assentamento Opcional -->
+        <label style="margin-top: 20px; font-weight: bold;">Houve assentamento (MD/MND)?</label>
+        <select id="hasAssentamento" onchange="toggleAssentamento()">
+            <option value="NÃO" selected="">NÃO</option>
+            <option value="SIM">SIM</option>
+        </select>
+
+        <div id="assentamentoContainer" class="hidden-field" style="background: transparent; border: none; padding: 0; display: none;">
+            <!-- Bloco MND -->
+            <label style="margin-top: 15px; font-weight: bold; color: #2f7cff; display: block;">Método Não Destrutivo (MND / Furo Direcional):</label>
+            <div id="furoList" class="dynamic-container"></div>
+            <button type="button" class="btn-add" style="background-color: #2f7cff; color: white; padding: 10px 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; margin-top: 6px; width: 100%; text-align: center;" onclick="adicionarEstacamentoCustom('furoList', 'furo')">➕ Adicionar Item MND</button>
+
+            <!-- Bloco MD -->
+            <label style="margin-top: 15px; font-weight: bold; color: #e67e22; display: block;">Método Destrutivo (MD):</label>
+            <div id="destrutivoList" class="dynamic-container"></div>
+            <button type="button" class="btn-add" style="background-color: #e67e22; color: white; padding: 10px 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; margin-top: 6px; width: 100%; text-align: center;" onclick="adicionarEstacamentoCustom('destrutivoList', 'destrutivo')">➕ Adicionar Item MD</button>
+        </div>
+
+        <!-- Teste de Pressão Opcional -->
+        <label style="margin-top: 20px; font-weight: bold; display: block;">Houve teste de pressão?</label>
+        <select id="hasTestePressao" onchange="toggleTestePressao()">
+            <option value="NÃO" selected="">NÃO</option>
+            <option value="SIM">SIM</option>
+        </select>
+
+        <div id="testePressaoContainer" class="hidden-field" style="background: transparent; border: none; padding: 0; display: none; margin-top: 10px;">
+            <div id="testePressaoList" class="dynamic-container"></div>
+            <button type="button" class="btn-add" style="background-color: #00a8ff; color: white; padding: 10px 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; width: 100%; text-align: center;" onclick="adicionarItemTestePressao()">➕ Adicionar Item de Teste</button>
+        </div>
+        </div><!-- /containerAtividadesPadrao -->
+
+        <div id="blocoObservacoesInicio" style="display: block;">
+            <label style="margin-top: 15px; display: block; font-weight: bold;">Observações:</label>
+            <div id="obsList" class="dynamic-container"></div>
+            <button type="button" class="btn-add" onclick="adicionarFechamentoItem('obsList', 'Ex: Observação do dia...', 'obs-input')">➕ Adicionar Observação</button>
+        </div>
+
+        <div id="containerFechamentoTermino" style="display: none;">
+            <label style="margin-top: 15px; display: block; font-weight: bold;">Pendências:</label>
+            <div id="pendList" class="dynamic-container"></div>
+            <button type="button" class="btn-add" onclick="adicionarFechamentoItem('pendList', 'Ex: Pendência a resolver...', 'pend-input')">➕ Adicionar Pendência</button>
+        </div>
+
+        <div id="blocoNcTermino" style="display: none;">
+            <label style="margin-top: 15px; display: block; font-weight: bold;">Não Conformidades:</label>
+            <div id="ncList" class="dynamic-container"></div>
+            <button type="button" class="btn-add" onclick="adicionarFechamentoItem('ncList', 'Ex: Falta de EPI adequado...', 'nc-input')">➕ Adicionar Não Conformidade</button>
+        </div>
+
+        <div class="btn-group">
+            <button type="button" class="btn-save" onclick="salvarReporte()">💾 Salvar Reporte no Histórico</button>
+            <button type="button" class="btn-whatsapp" onclick="enviarWhatsApp()">🚀 Gerar e Enviar para o WhatsApp</button>
+            <button type="button" class="btn-copy" onclick="copiarTexto()">📋 Apenas Copiar RDO Formatado</button>
+        </div>
+        
+        <div id="alertBox" class="alert-box">✓ Pronto! RDO compactado e copiado para a área de transferência.</div>
+    </form>
+    </div><!-- /viewGerador -->
+
+    <!-- ===== VIEW: HISTÓRICO / CONSULTA DE REPORTES ===== -->
+    <div id="viewHistorico" style="display:none;">
+        <div class="hist-toolbar">
+            <input type="text" id="histBusca" placeholder="🔎 Buscar por obra, projeto, data ou conteúdo..." oninput="renderHistorico()">
+        </div>
+        <div id="histLista" class="hist-lista"></div>
+        <div id="histVazio" class="hist-vazio" style="display:none;">
+            Nenhum reporte salvo ainda.<br>
+            Preencha um reporte no Gerador e toque em <b>“💾 Salvar Reporte no Histórico”</b>.
+        </div>
+    </div>
+
+    <!-- ===== VIEW: MINHAS OBRAS (cadastro local do técnico) ===== -->
+    <div id="viewObras" style="display:none;">
+        <div class="section-title">Cadastrar Nova Obra</div>
+        <p class="obras-ajuda">As obras ficam salvas <b>neste aparelho</b> e passam a aparecer no campo <b>Projeto</b> do Gerador, preenchendo os dados automaticamente.</p>
+
+        <label for="obraNome">Nome do Projeto:<span class="obrigatorio">*</span></label>
+        <input type="text" id="obraNome" placeholder="Ex: RENOVAÇÃO ERPTA25502">
+
+        <div class="row">
+            <div class="col"><label for="obraTu">Código TU:</label><input type="text" id="obraTu" placeholder="Ex: 108.25.263"></div>
+            <div class="col"><label for="obraPressao">Pressão:</label><input type="text" id="obraPressao" placeholder="Ex: LT17/LL4"></div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <label for="obraMaterial">Material:</label>
+                <select id="obraMaterial">
+                    <option value="Aço/PE">Aço/PE</option>
+                    <option value="Aço">Aço</option>
+                    <option value="PE">PE</option>
+                </select>
+            </div>
+            <div class="col">
+                <label for="obraDiametro">Diâmetro:</label>
+                <input type="text" id="obraDiametro" placeholder="Ex: ø6 Aço/ø250mm">
+            </div>
+        </div>
+
+        <label for="obraEndereco">Endereço:</label>
+        <input type="text" id="obraEndereco" placeholder="Endereço da obra">
+
+        <div class="row">
+            <div class="col"><label for="obraContratada">Contratada:</label><input type="text" id="obraContratada" placeholder="Ex: Sialdrill"></div>
+            <div class="col"><label for="obraSupervisor">Supervisor:</label><input type="text" id="obraSupervisor" placeholder="Nome do supervisor"></div>
+        </div>
+
+        <label>Autorização:</label>
+        <div class="row">
+            <div class="col"><label for="obraAuthDataIni" class="sub">Data início</label><input type="date" id="obraAuthDataIni"></div>
+            <div class="col"><label for="obraAuthDataFim" class="sub">Data fim</label><input type="date" id="obraAuthDataFim"></div>
+        </div>
+        <div class="row">
+            <div class="col"><label for="obraAuthHoraIni" class="sub">Hora início</label><input type="time" id="obraAuthHoraIni"></div>
+            <div class="col"><label for="obraAuthHoraFim" class="sub">Hora fim</label><input type="time" id="obraAuthHoraFim"></div>
+        </div>
+
+        <div class="row">
+            <div class="col"><label for="obraAuditor">Auditor:</label><input type="text" id="obraAuditor" placeholder="Ex: Lucas"></div>
+            <div class="col"><label for="obraVeiculo">Veículo:</label><input type="text" id="obraVeiculo" placeholder="Ex: Kwid"></div>
+        </div>
+        <div class="row">
+            <div class="col"><label for="obraPlaca">Placa:</label><input type="text" id="obraPlaca" placeholder="Ex: TAM7J23"></div>
+            <div class="col"><label for="obraHospital">Hospital Contingência:</label><input type="text" id="obraHospital" placeholder="Ex: UBS Mais Independência"></div>
+        </div>
+
+        <div class="btn-group">
+            <button type="button" class="btn-save" onclick="salvarObra()">💾 Salvar Obra</button>
+        </div>
+        <div id="obraAlert" class="alert-box"></div>
+
+        <div class="section-title">Obras Cadastradas</div>
+        <div id="obrasListaCadastro"></div>
+        <div id="obrasVazio" class="hist-vazio" style="display: block;">
+            Nenhuma obra cadastrada ainda.<br>
+            Preencha o formulário acima e toque em <b>“💾 Salvar Obra”</b>.
+        </div>
+    </div>
+</div>
+
+<!-- ===== MODAL: CAMPOS OBRIGATÓRIOS ===== -->
+<div id="modalObrigatorios" class="modal-overlay" style="display:none;" onclick="if(event.target===this)fecharModalObrigatorios()">
+    <div class="modal-box">
+        <div class="modal-icon">⚠️</div>
+        <div class="modal-titulo">Campos obrigatórios</div>
+        <div class="modal-texto" id="modalObrigatoriosTexto">Por favor, preencha todos os campos obrigatórios antes de continuar!</div>
+        <button type="button" class="modal-btn" onclick="fecharModalObrigatorios()">Entendi</button>
+    </div>
+</div>
+
+<script>
+
+    // --- FUNÇÕES ADICIONADAS EXCLUSIVAS PARA ASSENTAMENTO E TESTE ---
+    function adicionarEstacamentoCustom(containerId, tipo) {
+        const container = document.getElementById(containerId);
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'dynamic-item';
+        itemDiv.style.background = '#222';
+        itemDiv.style.padding = '12px';
+        itemDiv.style.borderRadius = '8px';
+        itemDiv.style.marginBottom = '10px';
+        itemDiv.style.border = '1px solid #3a3a3a';
+        
+        const diametros = ["63mm", "125mm", "250mm", "2\"", "4\"", "6\"", "8\"", "10\"", "12\"", "14\"", "20\""];
+        let optionsDiametro = diametros.map(d => `<option value="${d}">${d}</option>`).join('');
+
+        let htmlCamposEspecificos = '';
+        if (tipo === 'furo') {
+            htmlCamposEspecificos = `
+                <div class="col" style="width: 35%;">
+                    <label style="margin-top:0; font-size:11px; color:#aaa;">Operação</label>
+                    <select class="assentamento-operacao" style="width:100%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;">
+                        <option value="Furo direcional + Puxe">Furo + Puxe</option>
+                        <option value="Puxe">Apenas Puxe</option>
+                        <option value="Furo direcional">Apenas Furo</option>
+                    </select>
+                </div>
+            `;
+        }
+
+        itemDiv.innerHTML = `
+            <div class="dynamic-input-cell">
+                <div class="row" style="margin-bottom: 6px; display: flex; gap: 8px;">
+                    ${htmlCamposEspecificos}
+                    <div class="col" style="flex: 1;">
+                        <label style="margin-top:0; font-size:11px; color:#aaa;">Material</label>
+                        <select class="assentamento-material" style="width:100%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;">
+                            <option value="PE">PE</option>
+                            <option value="Aço">Aço</option>
+                        </select>
+                    </div>
+                    <div class="col" style="flex: 1;">
+                        <label style="margin-top:0; font-size:11px; color:#aaa;">Diâmetro</label>
+                        <select class="assentamento-diametro" style="width:100%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;">
+                            ${optionsDiametro}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="estaca-row">
+                    <input type="number" class="estaca-ini-num" placeholder="Est. Ini" style="width: 22%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;" oninput="calcularMetragemEstaca(this)">
+                    <span style="color: #888;">+</span>
+                    <input type="number" step="0.01" class="estaca-ini-m" placeholder="m" value="0.00" style="width: 20%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;" oninput="calcularMetragemEstaca(this)">
+                    <span style="color: #888; padding: 0 4px;">a</span>
+                    <input type="number" class="estaca-fim-num" placeholder="Est. Fim" style="width: 22%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;" oninput="calcularMetragemEstaca(this)">
+                    <span style="color: #888;">+</span>
+                    <input type="number" step="0.01" class="estaca-fim-m" placeholder="m" value="0.00" style="width: 20%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;" oninput="calcularMetragemEstaca(this)">
+                </div>
+                <div class="calc-preview" data-valor-calculado="0">Resultado: E0+0,00m a E0+0,00m = 0,00m</div>
+            </div>
+            <div style="display: flex; justify-content: flex-end; margin-top: 6px;">
+                <button type="button" style="background:#cf222e; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:bold;" onclick="this.closest('.dynamic-item').remove()">✕ Remover</button>
+            </div>
+        `;
+        
+        container.appendChild(itemDiv);
+    }
+
+    function calcularMetragemEstaca(el) {
+        const item = el.closest('.dynamic-item');
+        const eIniNum = parseFloat(item.querySelector('.estaca-ini-num').value) || 0;
+        const eIniM = parseFloat(item.querySelector('.estaca-ini-m').value) || 0;
+        const eFimNum = parseFloat(item.querySelector('.estaca-fim-num').value) || 0;
+        const eFimM = parseFloat(item.querySelector('.estaca-fim-m').value) || 0;
+        
+        const totalMetrosInicial = (eIniNum * 20) + eIniM;
+        const totalMetrosFinal = (eFimNum * 20) + eFimM;
+        const metragemFinal = Math.abs(totalMetrosFinal - totalMetrosInicial);
+        
+        const preview = item.querySelector('.calc-preview');
+        preview.innerText = `Resultado: E${eIniNum}+${eIniM.toFixed(2)}m a E${eFimNum}+${eFimM.toFixed(2)}m = ${metragemFinal.toFixed(2)}m`;
+        preview.setAttribute('data-valor-calculado', metragemFinal);
+    }
+
+    function toggleAssentamento() {
+        const hasAssentamento = document.getElementById('hasAssentamento').value;
+        const container = document.getElementById('assentamentoContainer');
+        container.style.display = (hasAssentamento === 'SIM') ? 'block' : 'none';
+    }
+
+    function toggleTestePressao() {
+        const hasTeste = document.getElementById('hasTestePressao').value;
+        const container = document.getElementById('testePressaoContainer');
+        container.style.display = (hasTeste === 'SIM') ? 'block' : 'none';
+    }
+
+    function alternarTipoSubTeste(selectEl) {
+        const item = selectEl.closest('.dynamic-item');
+        const tipo = selectEl.value;
+        item.querySelector('.bloco-teste-rede').style.display = (tipo === 'Rede') ? 'block' : 'none';
+        item.querySelector('.bloco-teste-conexao').style.display = (tipo === 'Conexão') ? 'block' : 'none';
+    }
+
+    function atualizarPreviewEstacaConexao(el) {
+        const item = el.closest('.dynamic-item');
+        if (!item) return;
+        const eNum = parseFloat(item.querySelector('.t-conexao-estaca-num')?.value) || 0;
+        const eM = parseFloat(item.querySelector('.t-conexao-estaca-m')?.value) || 0;
+        const preview = item.querySelector('.t-conexao-estaca-preview');
+        if (preview) preview.innerText = `Estaca: ${formatarEstaca(eNum, eM)}`;
+    }
+
+    function obterEstacaConexaoTeste(item) {
+        const eNum = parseFloat(item.querySelector('.t-conexao-estaca-num')?.value) || 0;
+        const eM = parseFloat(item.querySelector('.t-conexao-estaca-m')?.value) || 0;
+        return formatarEstaca(eNum, eM);
+    }
+
+    function toggleComentarioTeste(selectEl) {
+        const item = selectEl.closest('.dynamic-item');
+        item.querySelector('.container-comentario-teste').style.display = (selectEl.value === 'SIM') ? 'block' : 'none';
+    }
+
+    function metrosDeEstaca(numEstaca, metros) {
+        return (numEstaca * 20) + metros;
+    }
+
+    function formatarEstaca(numEstaca, metros) {
+        const m = (parseFloat(metros) || 0).toFixed(2).replace('.', ',');
+        return `E${numEstaca}+${m}m`;
+    }
+
+    function obterMetragemEstacaItem(item) {
+        const eIniNum = parseFloat(item.querySelector('.estaca-ini-num')?.value) || 0;
+        const eIniM = parseFloat(item.querySelector('.estaca-ini-m')?.value) || 0;
+        const eFimNum = parseFloat(item.querySelector('.estaca-fim-num')?.value) || 0;
+        const eFimM = parseFloat(item.querySelector('.estaca-fim-m')?.value) || 0;
+        const preview = item.querySelector('.calc-preview');
+        let diff = preview ? parseFloat(preview.getAttribute('data-valor-calculado')) : NaN;
+        if (isNaN(diff)) {
+            diff = Math.abs(metrosDeEstaca(eFimNum, eFimM) - metrosDeEstaca(eIniNum, eIniM));
+        }
+        return {
+            ini: formatarEstaca(eIniNum, eIniM),
+            fim: formatarEstaca(eFimNum, eFimM),
+            diff
+        };
+    }
+
+    function calcularMetragemTeste(el) {
+        const item = el.closest('.dynamic-item');
+        if (!item) return 0;
+        const iniNum = item.querySelector('.t-estaca-ini-num');
+        const iniM = item.querySelector('.t-estaca-ini-m');
+        const fimNum = item.querySelector('.t-estaca-fim-num');
+        const fimM = item.querySelector('.t-estaca-fim-m');
+        const preview = item.querySelector('.t-calc-preview');
+        if (!iniNum || !iniM || !fimNum || !fimM || !preview) return 0;
+
+        const eIniNum = parseFloat(iniNum.value) || 0;
+        const eIniM = parseFloat(iniM.value) || 0;
+        const eFimNum = parseFloat(fimNum.value) || 0;
+        const eFimM = parseFloat(fimM.value) || 0;
+
+        const totalMetrosInicial = metrosDeEstaca(eIniNum, eIniM);
+        const totalMetrosFinal = metrosDeEstaca(eFimNum, eFimM);
+        const metragemFinal = Math.abs(totalMetrosFinal - totalMetrosInicial);
+
+        preview.innerText = `Resultado: ${formatarEstaca(eIniNum, eIniM)} a ${formatarEstaca(eFimNum, eFimM)} = ${metragemFinal.toFixed(2).replace('.', ',')}m`;
+        preview.setAttribute('data-valor-calculado', metragemFinal);
+        return metragemFinal;
+    }
+
+    function adicionarItemTestePressao() {
+        const container = document.getElementById('testePressaoList');
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'dynamic-item';
+        itemDiv.style.background = '#222';
+        itemDiv.style.padding = '12px';
+        itemDiv.style.borderRadius = '8px';
+        itemDiv.style.marginBottom = '12px';
+        itemDiv.style.border = '1px solid #3a3a3a';
+        
+        const diametros = ["63mm", "125mm", "250mm", "2\"", "4\"", "6\"", "8\"", "10\"", "12\"", "14\"", "20\""];
+        let optionsDiametro = diametros.map(d => `<option value="${d}">${d}</option>`).join('');
+
+        itemDiv.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid #444; padding-bottom: 6px;">
+                <span style="font-weight: bold; color: #00a8ff; font-size: 13px;">📋 Item de Teste de Pressão</span>
+                <button type="button" style="background: #cf222e; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight:bold;" onclick="this.closest('.dynamic-item').remove()">✕ Remover</button>
+            </div>
+            
+            <div style="margin-bottom: 8px;">
+                <label style="font-size: 12px; color: #aaa; margin-top: 0;">Tipo de Teste</label>
+                <select class="t-tipo-principal" onchange="alternarTipoSubTeste(this)" style="width:100%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;">
+                    <option value="Rede">Rede</option>
+                    <option value="Conexão">Conexão</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom: 8px;">
+                <label style="font-size: 12px; color: #aaa; margin-top: 0;">Teste</label>
+                <select class="t-metodo" style="width:100%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;">
+                    <option value="Pneumático">Pneumático</option>
+                    <option value="Hidrostático">Hidrostático</option>
+                </select>
+            </div>
+
+            <!-- BLOCO REDE -->
+            <div class="bloco-teste-rede">
+                <label style="font-size: 12px; color: #aaa; margin-top: 4px;">Trecho (Estacamento)</label>
+                <div style="display: flex; gap: 4px; align-items: center; margin-bottom: 8px;">
+                    <input type="number" class="t-estaca-ini-num" placeholder="Est. Ini" style="width: 22%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;" oninput="calcularMetragemTeste(this)">
+                    <span style="color: #888;">+</span>
+                    <input type="number" step="0.01" class="t-estaca-ini-m" placeholder="m" value="0.00" style="width: 20%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;" oninput="calcularMetragemTeste(this)">
+                    <span style="color: #888; padding: 0 4px;">a</span>
+                    <input type="number" class="t-estaca-fim-num" placeholder="Est. Fim" style="width: 22%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;" oninput="calcularMetragemTeste(this)">
+                    <span style="color: #888;">+</span>
+                    <input type="number" step="0.01" class="t-estaca-fim-m" placeholder="m" value="0.00" style="width: 20%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;" oninput="calcularMetragemTeste(this)">
+                </div>
+                
+                <div class="t-calc-preview" data-valor-calculado="0">Resultado: E0+0,00m a E0+0,00m = 0,00m</div>
+
+                <div style="display: flex; gap: 8px; margin-bottom: 8px; margin-top: 8px;">
+                    <div style="flex: 1;">
+                        <label style="font-size: 11px; color: #aaa; margin-top: 0;">Material</label>
+                        <select class="t-rede-material" style="width:100%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;">
+                            <option value="PE">PE</option>
+                            <option value="Aço">Aço</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="font-size: 11px; color: #aaa; margin-top: 0;">Diâmetro</label>
+                        <select class="t-rede-diametro" style="width:100%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;">
+                            ${optionsDiametro}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BLOCO CONEXAO -->
+            <div class="bloco-teste-conexao" style="display: none;">
+                <div style="margin-bottom: 8px;">
+                    <label style="font-size: 12px; color: #aaa; margin-top: 0;">Estaca</label>
+                    <div style="display: flex; gap: 4px; align-items: center;">
+                        <input type="number" class="t-conexao-estaca-num" placeholder="Est." style="width: 35%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;" oninput="atualizarPreviewEstacaConexao(this)">
+                        <span style="color: #888;">+</span>
+                        <input type="number" step="0.01" class="t-conexao-estaca-m" placeholder="m" value="0.00" style="width: 35%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;" oninput="atualizarPreviewEstacaConexao(this)">
+                    </div>
+                    <div class="t-conexao-estaca-preview" style="background:#1a1a1a; padding:6px 10px; border-radius:4px; margin-top:6px; font-size:12px; color:#4cd137; font-weight:bold; border-left:3px solid #4cd137;">Estaca: E0+0,00m</div>
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <label style="font-size: 12px; color: #aaa; margin-top: 0;">Tipo de Conexão</label>
+                    <input type="text" class="t-conexao-tipo-input" placeholder="Ex: Conjunto de bloqueio (Conexão, vent e bag)" style="width:100%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;">
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <label style="font-size: 12px; color: #aaa; margin-top: 0;">Material</label>
+                    <select class="t-conexao-material" style="width:100%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;">
+                        <option value="Aço">Aço</option>
+                        <option value="PE">PE</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- CAMPOS COMUNS FINAIS -->
+            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                <div style="flex: 1;">
+                    <label style="font-size: 12px; color: #aaa; margin-top: 0;">Tempo de Teste</label>
+                    <input type="text" class="t-tempo" placeholder="Ex: 2:00h" style="width:100%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;">
+                </div>
+                <div style="flex: 1;">
+                    <label style="font-size: 12px; color: #aaa; margin-top: 0;">Resultado</label>
+                    <select class="t-resultado" style="width:100%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;">
+                        <option value="Aprovado">Aprovado</option>
+                        <option value="Reprovado">Reprovado</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 4px;">
+                <label style="font-size: 12px; color: #aaa; margin-top: 0;">Comentários?</label>
+                <select class="t-has-comentario" onchange="toggleComentarioTeste(this)" style="width:100%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;">
+                    <option value="NÃO">NÃO</option>
+                    <option value="SIM">SIM</option>
+                </select>
+            </div>
+            
+            <div class="container-comentario-teste" style="display: none; margin-top: 6px;">
+                <input type="text" class="t-comentario-texto" placeholder="Digite os comentários do teste..." style="width:100%; padding: 8px; background:#121212; color:#fff; border:1px solid #444; border-radius:6px;">
+            </div>
+        `;
+        container.appendChild(itemDiv);
+    }
+
+    let tipoJornadaAtual = "INICIO";
+
+    const OBRASOFT_CHECKLIST_ITENS = [
+        "Gerenciamento BV - SSM - Check-list Veicular",
+        "Gerenciamento BV - SSM - Documentação e Área de vivência",
+        "Gerenciamento BV - SSM - Furo Direcional",
+        "Gerenciamento BV - SSM - Içamento e Movimentação de carga",
+        "Gerenciamento BV - SSM - Sinalização de obras",
+        "Gerenciamento BV - SSM - Solda em Carga",
+        "Gerenciamento BV - SSM - Trabalho em vala",
+        "Gerenciamento BV - SSM - Uso de Equipamentos e Ferramentas",
+        "Gerenciamento BV - Solda de Eletrofusão",
+        "Gerenciamento BV - Solda de Topo - Termofusão",
+        "Gerenciamento BV - Solda em Aço - NÃO EM CARGA",
+        "Gerenciamento BV - Teste Hidrostático em redes e ramais em PE",
+        "Gerenciamento BV - Teste Pneumático em redes e ramais em PE",
+        "Gerenciamento BV - Teste de pressão em Redes e Ramais Aço"
+    ];
+
+    function carregarChecklistObrasoft() {
+        const container = document.getElementById('obrasoftChecklistContainer');
+        if (!container) return;
+        container.innerHTML = OBRASOFT_CHECKLIST_ITENS.map(item => `
+            <label class="obrasoft-checklist-label">
+                <input type="checkbox" class="obra-checkbox" value="${item.replace(/"/g, '&quot;')}">
+                <span>${item}</span>
+            </label>
+        `).join('');
+    }
+
+    const listaDeProjetos = [
+        { 
+            nome: "RENOVAÇÃO ERPTA25502", 
+            tu: "108.25.263 -F1A",
+            endereco: "Av. Dom Pedro I, 2020 - Terra Nova, Taubaté - SP, 12082-000", 
+            contratada: "Sialdrill",
+            material: "Aço/PE",
+            diametro: "ø6 Aço/ø250mm",
+            pressao: "LT17/LL4",
+            supervisor: "Vitor Aquino",
+            authIni: "2026-05-04",
+            authFim: "2026-06-17",
+            hIni: "07:00",
+            hFim: "17:00",
+            periodo: "Diurno",
+            hospital: "Pronto Socorro Municipal - Taubaté",
+            programa: "ESTAÇÕES"
+        },
+        { 
+            nome: "RENOVAÇÃO ERPSTS25501", 
+            tu: "108.24.310",
+            endereco: "R. Xavier Pinheiro, 142 - Macuco, Santos - SP, 11015-090", 
+            contratada: "Sialdrill",
+            material: "PE/ Aço",
+            diametro: "Ø250mm PE/Ø8\" Aço",
+            pressao: "LT17/LL4",
+            supervisor: "José Edmilson",
+            authIni: "2026-05-19",
+            authFim: "2026-08-18",
+            hIni: "07:00",
+            hFim: "17:00",
+            periodo: "Diurno",
+            hospital: "Complexo hospitalar dos estivadores",
+            programa: "ESTAÇÕES"
+        },
+ { 
+            nome: "SETORIZAÇÃO DIADEMA - PIRAPORINHA", 
+            tu: "108.25.326",
+            endereco: "Av. Antônio Piranga x Rua Doze de Outubro, Diadema - SP", 
+            contratada: "Sialdrill",
+            material: "PE",
+            diametro: "PE Ø63mm",
+            pressao: "LL4",
+            supervisor: "José Edmilson",
+            authIni: "2026-05-04",
+            authFim: "2026-06-03",
+            hIni: "21:00",
+            hFim: "05:00",
+            periodo: "Noturno",
+            hospital: "Hospital Municipal Diadema",
+            programa: "SETORIZAÇÃO"
+        }
+    ];
+
+    window.onload = function() {
+        document.getElementById('data').valueAsDate = new Date();
+        const agora = new Date();
+        document.getElementById('horaJornada').value = `${String(agora.getHours()).padStart(2, '0')}:${String(agora.getMinutes()).padStart(2, '0')}`;
+        
+        carregarProjetos();
+        carregarChecklistObrasoft();
+        adicionarAtividadeLivreInicio();
+        adicionarAtividadeLivre();
+        mudarTipoJornada("INICIO");
+        inicializarHistorico();
+        inicializarTema();
+    };
+
+    function mudarTipoJornada(tipo) {
+        tipoJornadaAtual = tipo;
+        const btnIni = document.getElementById('btnJornadaInicio');
+        const btnTerm = document.getElementById('btnJornadaTermino');
+        const lblHora = document.getElementById('lblHoraJornada');
+        
+        const containerInicioLocal = document.getElementById('containerInicioLocal');
+        const rowPoccTermino = document.getElementById('rowPoccTermino');
+        const containerProgramacaoInicio = document.getElementById('containerProgramacaoInicio');
+        const containerAtividadesPadrao = document.getElementById('containerAtividadesPadrao');
+        const containerFechamentoTermino = document.getElementById('containerFechamentoTermino');
+        
+        if (tipo === "INICIO") {
+            btnIni.className = "toggle-btn active";
+            btnTerm.className = "toggle-btn";
+            lblHora.innerHTML = 'Hora início:<span class="obrigatorio">*</span>';
+            
+            if(containerInicioLocal) containerInicioLocal.style.display = 'table';
+            if(rowPoccTermino) rowPoccTermino.style.display = 'none';
+            
+            alternarPrograma();
+        } else {
+            btnIni.className = "toggle-btn";
+            btnTerm.className = "toggle-btn active";
+            lblHora.innerHTML = 'Hora término:<span class="obrigatorio">*</span>';
+            
+            if(containerInicioLocal) containerInicioLocal.style.display = 'none';
+            if(rowPoccTermino) rowPoccTermino.style.display = 'table';
+            
+            alternarPrograma();
+        }
+    }
+
+    function carregarProjetos() {
+        const selProj = document.getElementById('projeto');
+        if (!selProj) return;
+        const valorAtual = selProj.value;
+        const programa = document.getElementById('programa').value;
+        let html = '<option value="">-- Selecione o Projeto --</option>';
+        listaDeProjetos.forEach((p, idx) => {
+            if (p.programa === programa) {
+                html += `<option value="${escAttr(p.nome)}" data-index="${idx}">${escapeHtml(p.nome)}</option>`;
+            }
+        });
+        const obras = lerObras();
+        if (obras.length) {
+            html += '<optgroup label="🏗️ Minhas Obras">';
+            obras.forEach(o => {
+                html += `<option value="${escAttr(o.nome)}" data-obra-id="${o.id}">${escapeHtml(o.nome)}</option>`;
+            });
+            html += '</optgroup>';
+        }
+        html += '<option value="MANUAL">PREENCHER MANUALMENTE</option>';
+        selProj.innerHTML = html;
+        // Restaura a seleção anterior, se ainda existir entre as opções
+        if (valorAtual) {
+            selProj.value = valorAtual;
+            if (selProj.value !== valorAtual) selProj.value = '';
+        }
+    }
+
+    function atualizarVisibilidadeObrasoft() {
+        const containerObrasoft = document.getElementById('containerObrasoftTermino');
+        if (!containerObrasoft) return;
+        const mostrar = tipoJornadaAtual === "TERMINO";
+        containerObrasoft.style.display = mostrar ? 'block' : 'none';
+        if (!mostrar) {
+            const sel = document.getElementById('realizouObrasoft');
+            if (sel) sel.value = 'NAO';
+            toggleObrasoftSeccion();
+        }
+    }
+
+    function atualizarBlocoObservacoesNc() {
+        const programa = document.getElementById('programa').value;
+        const blocoObs = document.getElementById('blocoObservacoesInicio');
+        const blocoNc = document.getElementById('blocoNcTermino');
+        const blocoPend = document.getElementById('containerFechamentoTermino');
+        if (!blocoObs || !blocoNc) return;
+        const inicio = tipoJornadaAtual === "INICIO";
+        const termino = tipoJornadaAtual === "TERMINO";
+        const crcNuvem = programa === "CRC NUVEM";
+
+        blocoObs.style.display = (inicio || termino) ? 'block' : 'none';
+        blocoNc.style.display = termino ? 'block' : 'none';
+        if (blocoPend) {
+            blocoPend.style.display = (termino && !crcNuvem) ? 'block' : 'none';
+        }
+    }
+
+    function alternarPrograma() {
+        const programa = document.getElementById('programa').value;
+        carregarProjetos();
+
+        const blocoSelecaoProjeto = document.getElementById('blocoSelecaoProjeto');
+        const containerCamposPadrao = document.getElementById('containerCamposPadrao');
+        const seccionCrcCidade = document.getElementById('seccionCrcCidade');
+        const lblEndereco = document.getElementById('labelEndereco');
+        const inputEndereco = document.getElementById('endereco');
+        
+        const containerProgramacaoInicio = document.getElementById('containerProgramacaoInicio');
+        const seccionCrcPlanejados = document.getElementById('seccionCrcPlanejados');
+        const seccionCrcRenovados = document.getElementById('seccionCrcRenovados');
+        const containerAtividadesPadrao = document.getElementById('containerAtividadesPadrao');
+        const containerFechamentoTermino = document.getElementById('containerFechamentoTermino');
+
+        if (programa === "CRC NUVEM") {
+            if(blocoSelecaoProjeto) blocoSelecaoProjeto.style.display = 'none';
+            if(containerCamposPadrao) containerCamposPadrao.style.display = 'none';
+            if(seccionCrcCidade) seccionCrcCidade.style.display = 'block';
+            document.getElementById('campoProjetoManual').style.display = 'none';
+            document.getElementById('containerPoccPadrao').style.display = 'none';
+
+            if (tipoJornadaAtual === "INICIO") {
+                if(containerProgramacaoInicio) containerProgramacaoInicio.style.display = 'none';
+                if(containerAtividadesPadrao) containerAtividadesPadrao.style.display = 'none';
+                if(seccionCrcPlanejados) seccionCrcPlanejados.style.display = 'block';
+                if(seccionCrcRenovados) seccionCrcRenovados.style.display = 'none';
+                if(containerFechamentoTermino) containerFechamentoTermino.style.display = 'none';
+                if (document.getElementById('crcListListPlanejados') && document.getElementById('crcListPlanejados').children.length === 0) adicionarCrcPlanejadoItem();
+            } else {
+                if(containerProgramacaoInicio) containerProgramacaoInicio.style.display = 'none';
+                if(containerAtividadesPadrao) containerAtividadesPadrao.style.display = 'none';
+                if(seccionCrcPlanejados) seccionCrcPlanejados.style.display = 'none';
+                if(seccionCrcRenovados) seccionCrcRenovados.style.display = 'block';
+                if(containerFechamentoTermino) containerFechamentoTermino.style.display = 'none';
+                if (document.getElementById('crcList').children.length === 0) adicionarCrcItem();
+            }
+        } else {
+            if(blocoSelecaoProjeto) blocoSelecaoProjeto.style.display = 'block';
+            if(containerCamposPadrao) containerCamposPadrao.style.display = 'block';
+            if(seccionCrcCidade) seccionCrcCidade.style.display = 'none';
+            if(seccionCrcPlanejados) seccionCrcPlanejados.style.display = 'none';
+            if(seccionCrcRenovados) seccionCrcRenovados.style.display = 'none';
+
+            if (tipoJornadaAtual === "INICIO") {
+                if(containerProgramacaoInicio) containerProgramacaoInicio.style.display = 'block';
+                if(containerAtividadesPadrao) containerAtividadesPadrao.style.display = 'none';
+                if(containerFechamentoTermino) containerFechamentoTermino.style.display = 'none';
+            } else {
+                if(containerProgramacaoInicio) containerProgramacaoInicio.style.display = 'none';
+                if(containerAtividadesPadrao) containerAtividadesPadrao.style.display = 'block';
+            }
+            atualizarDadosProjeto();
+            avaliarVisibilidadePoccAtendentes();
+        }
+        atualizarVisibilidadeObrasoft();
+        atualizarBlocoObservacoesNc();
+    }
+
+    function avaliarVisibilidadePoccAtendentes() {
+        const programa = document.getElementById('programa').value;
+        if (programa === "CRC NUVEM") return;
+        const poccValue = document.getElementById('poccPocs').value.trim();
+        const containerPocc = document.getElementById('containerPoccPadrao');
+        containerPocc.style.display = (poccValue === "") ? 'none' : 'block';
+    }
+
+    function atualizarDadosProjeto() {
+        const select = document.getElementById('projeto');
+        if(!select || select.value === "") return;
+        const campoManual = document.getElementById('campoProjetoManual');
+        const opt = select.options[select.selectedIndex];
+
+        if (select.value === "MANUAL") {
+            campoManual.style.display = 'block';
+            removerOpcoesObraCustom();
+            ['tu','endereco','diametro','pressao','supervisor','authCrcDataIni','authCrcDataFim','authCrcHoraIni','authCrcHoraFim','hospital'].forEach(id => setVal(id, ''));
+            const mat = document.getElementById('material'); if (mat) mat.value = 'Aço/PE';
+            const contr = document.getElementById('contratada'); if (contr) contr.value = 'Sialdrill';
+            return;
+        }
+
+        campoManual.style.display = 'none';
+
+        // Obra cadastrada pelo técnico (localStorage)
+        const obraId = opt ? opt.getAttribute('data-obra-id') : null;
+        if (obraId) {
+            const obra = lerObras().find(o => o.id === obraId);
+            if (obra) preencherGeradorComObra(obra);
+            return;
+        }
+
+        // Projeto fixo da lista interna
+        removerOpcoesObraCustom();
+        const index = opt ? opt.getAttribute('data-index') : null;
+        if (index !== null && index !== undefined && index !== '') {
+            const projData = listaDeProjetos[index];
+            setVal('endereco', projData.endereco);
+            const contr = document.getElementById('contratada'); if (contr) contr.value = projData.contratada || 'Sialdrill';
+            setVal('tu', projData.tu);
+            const mat = document.getElementById('material'); if (mat) mat.value = projData.material || 'Aço/PE';
+            setVal('diametro', projData.diametro);
+            setVal('pressao', projData.pressao);
+            setVal('supervisor', projData.supervisor);
+            setVal('authCrcDataIni', projData.authIni);
+            setVal('authCrcDataFim', projData.authFim);
+            setVal('authCrcHoraIni', projData.hIni);
+            setVal('authCrcHoraFim', projData.hFim);
+            setVal('hospital', projData.hospital);
+        }
+    }
+
+    function adicionarCrcPlanejadoItem() {
+        const container = document.getElementById('crcListPlanejados');
+        const div = document.createElement('div');
+        div.className = 'dynamic-item';
+        div.innerHTML = `
+            <div class="dynamic-input-cell">
+                <div class="estaca-row">
+                    <div class="estaca-col" style="width: 45%;">
+                        <label style="margin:0; font-size:11px;">Plano</label>
+                        <select class="crc-plano">
+                            <option value="Plano A">Plano A</option>
+                            <option value="Plano B">Plano B</option>
+                        </select>
+                    </div>
+                    <div class="estaca-col" style="width: 55%;"><label style="margin:0; font-size:11px;">Identificação do CRC</label><input type="text" class="crc-nome" placeholder="Ex: CRC08567_05"></div>
+                </div>
+                <div class="estaca-row" style="margin-top:8px;">
+                    <div class="estaca-col"><label style="margin:0; font-size:11px;">Equipe</label><input type="text" class="crc-equipe" placeholder="Ex: Equipe 01 - João, Maria..."></div>
+                </div>
+                <div class="estaca-row" style="margin-top:8px;">
+                    <div class="estaca-col"><label style="margin:0; font-size:11px;">Endereço</label><input type="text" class="crc-end" placeholder="Ex: Rua das Goiabas"></div>
+                </div>
+                <div class="estaca-row" style="margin-top:8px;">
+                    <div class="estaca-col">
+                        <label style="margin:0; font-size:11px;">P. Ent./Saída</label>
+                        <select class="crc-pressao">
+                            <option value="4bar/350mbar">4bar/350mbar</option>
+                            <option value="4bar/75mbar">4bar/75mbar</option>
+                            <option value="1bar/350mbar">1bar/350mbar</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="dynamic-btn-cell"><button type="button" class="btn-remove" onclick="removerItem(this)">X</button></div>
+        `;
+        container.appendChild(div);
+    }
+
+    function adicionarCrcItem() {
+        const container = document.getElementById('crcList');
+        const div = document.createElement('div');
+        div.className = 'dynamic-item';
+        div.innerHTML = `
+            <div class="dynamic-input-cell">
+                <div class="estaca-row">
+                    <div class="estaca-col"><label style="margin:0; font-size:11px;">CRC</label><input type="text" class="crc-tag" placeholder="Ex: CRC08567_05"></div>
+                    <div class="estaca-col"><label style="margin:0; font-size:11px;">Série</label><input type="text" class="crc-serie" placeholder="Ex: 26.0323"></div>
+                </div>
+                <div class="estaca-row" style="margin-top:8px;">
+                    <div class="estaca-col"><label style="margin:0; font-size:11px;">Equipe</label><input type="text" class="crc-equipe" placeholder="Ex: Equipe 01 - João, Maria..."></div>
+                </div>
+                <div class="estaca-row" style="margin-top:8px;">
+                    <div class="estaca-col"><label style="margin:0; font-size:11px;">Fabricante</label><input type="text" class="crc-fab" placeholder="Ex: CLESSE"></div>
+                    <div class="estaca-col"><label style="margin:0; font-size:11px;">Ano Fabricação</label><input type="text" class="crc-ano" placeholder="Ex: 04/2026"></div>
+                </div>
+                <div class="estaca-row" style="margin-top:8px;">
+                    <div class="estaca-col"><label style="margin:0; font-size:11px;">Mod. Regulador</label><input type="text" class="crc-reg" placeholder="Ex: APS2 OPSO"></div>
+                    <div class="estaca-col"><label style="margin:0; font-size:11px;">Mod. Shut-off</label><input type="text" class="crc-shut" placeholder="Ex: Incorporada"></div>
+                </div>
+                <div class="estaca-row" style="margin-top:8px;">
+                    <div class="estaca-col"><label style="margin:0; font-size:11px;">Vazão</label><input type="text" class="crc-vazao" placeholder="Ex: 100 m3/h"></div>
+                    <div class="col">
+                        <label style="margin:0; font-size:11px;">P. Ent./Saída</label>
+                        <select class="crc-pressao">
+                            <option value="4bar/350mbar">4bar/350mbar</option>
+                            <option value="4bar/75mbar">4bar/75mbar</option>
+                            <option value="1bar/350mbar">1bar/350mbar</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="estaca-row" style="margin-top:8px;">
+                    <div class="col">
+                        <label style="margin:0; font-size:11px;">Recomposição</label>
+                        <select class="crc-recomp">
+                            <option value="Definitiva">Definitiva</option>
+                            <option value="Provisória">Provisória</option>
+                        </select>
+                    </div>
+                    <div class="estaca-col"><label style="margin:0; font-size:11px;">Endereço</label><input type="text" class="crc-end" placeholder="Ex: Rua das Goiabas"></div>
+                </div>
+                <div class="estaca-row" style="margin-top:8px;">
+                    <div class="estaca-col"><label style="margin:0; font-size:11px;">Hora Início</label><input type="time" class="crc-h-ini"></div>
+                    <div class="estaca-col"><label style="margin:0; font-size:11px;">Hora Término</label><input type="time" class="crc-h-fim"></div>
+                </div>
+            </div>
+            <div class="dynamic-btn-cell"><button type="button" class="btn-remove" onclick="removerItem(this)">X</button></div>
+        `;
+        container.appendChild(div);
+    }
+
+    function toggleAssentamento() {
+        document.getElementById('assentamentoContainer').style.display = (document.getElementById('hasAssentamento').value === "SIM") ? 'block' : 'none';
+    }
+    function toggleTestePressao() {
+        document.getElementById('testePressaoContainer').style.display = (document.getElementById('hasTestePressao').value === "SIM") ? 'block' : 'none';
+    }
+
+    function adicionarAtividadeLivreInicio() {
+        const container = document.getElementById('atividadesListInicio');
+        if(!container) return;
+        const div = document.createElement('div');
+        div.style.display = 'table'; div.style.width = '100%'; div.style.marginBottom = '6px';
+        div.innerHTML = `
+            <div style="display: table-cell; width: 85%; vertical-align: middle;"><textarea class="atv-inicio-input" rows="1" placeholder="Ex: Instalação de placas..." oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px';" style="resize: none; overflow-y: hidden; min-height: 42px; display: block;"></textarea></div>
+            <div style="display: table-cell; width: 15%; text-align: right; padding-left: 8px; vertical-align: middle;"><button type="button" class="btn-remove" style="padding: 11px 5px;" onclick="this.parentElement.parentElement.remove()">X</button></div>
+        `;
+        container.appendChild(div);
+    }
+
+    function adicionarAtividadeLivre() {
+        const container = document.getElementById('atividadesList');
+        if(!container) return;
+        const div = document.createElement('div');
+        div.style.display = 'table'; div.style.width = '100%'; div.style.marginBottom = '6px';
+        div.innerHTML = `
+            <div style="display: table-cell; width: 85%; vertical-align: middle;"><textarea class="atv-input" rows="1" placeholder="Ex: Execução de vala..." oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px';" style="resize: none; overflow-y: hidden; min-height: 42px; display: block;"></textarea></div>
+            <div style="display: table-cell; width: 15%; text-align: right; padding-left: 8px; vertical-align: middle;"><button type="button" class="btn-remove" style="padding: 11px 5px;" onclick="this.parentElement.parentElement.remove()">X</button></div>
+        `;
+        container.appendChild(div);
+    }
+
+    function adicionarFechamentoItem(containerId, placeholder, inputClass) {
+        const container = document.getElementById(containerId);
+        const div = document.createElement('div');
+        div.style.display = 'table'; div.style.width = '100%'; div.style.marginBottom = '6px';
+        div.innerHTML = `
+            <div style="display: table-cell; width: 85%; vertical-align: middle;"><textarea class="${inputClass}" rows="1" placeholder="${placeholder}" oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px';" style="resize: none; overflow-y: hidden; min-height: 42px; display: block;"></textarea></div>
+            <div style="display: table-cell; width: 15%; text-align: right; padding-left: 8px; vertical-align: middle;"><button type="button" class="btn-remove" style="padding: 11px 5px;" onclick="this.parentElement.parentElement.remove()">X</button></div>
+        `;
+        container.appendChild(div);
+    }
+
+    /* ===================== MEDIÇÃO DE VALA (lista dinâmica) ===================== */
+    function toggleVala() {
+        const has = document.getElementById('hasVala').value;
+        document.getElementById('valaContainer').style.display = (has === 'SIM') ? 'block' : 'none';
+    }
+
+    function toggleValaProfundidade() {
+        const tipo = document.getElementById('valaTipo').value;
+        const wrap = document.getElementById('valaProfundidadeWrap');
+        if (wrap) wrap.style.display = (tipo === 'Recomposição Asfáltica') ? 'none' : 'block';
+    }
+
+    // Mantém só dígitos; auto-salta para o campo decimal ao digitar vírgula/ponto ou ao atingir o limite.
+    function valaAutoTab(el, nextId, maxDigits) {
+        const raw = el.value || '';
+        const posSep = raw.search(/[.,]/);
+        if (posSep !== -1) {
+            el.value = raw.slice(0, posSep).replace(/\D/g, '');
+            const dec = raw.slice(posSep + 1).replace(/\D/g, '').slice(0, 2);
+            const next = document.getElementById(nextId);
+            if (next) { next.value = dec; next.focus(); }
+            return;
+        }
+        el.value = raw.replace(/\D/g, '');
+        if (maxDigits && el.value.length >= maxDigits) {
+            const next = document.getElementById(nextId);
+            if (next) next.focus();
+        }
+    }
+
+    function valaDecimal(el) {
+        el.value = (el.value || '').replace(/\D/g, '').slice(0, 2);
+    }
+
+    // Junta inteiro + decimal no formato "Inteiro,Decimal" (decimal sempre com 2 casas).
+    function juntarValaParte(intId, decId) {
+        const i = (document.getElementById(intId).value || '').replace(/\D/g, '');
+        const d = (document.getElementById(decId).value || '').replace(/\D/g, '').slice(0, 2);
+        if (i === '' && d === '') return '';
+        const intPart = (i === '') ? '0' : i;
+        const decPart = (d + '00').slice(0, 2);
+        return `${intPart},${decPart}`;
+    }
+
+    function mostrarAlertaVala(msg) {
+        const a = document.getElementById('valaAlerta');
+        if (!a) return;
+        a.textContent = msg;
+        a.style.display = 'block';
+        clearTimeout(window.__valaAlertTimer);
+        window.__valaAlertTimer = setTimeout(() => { a.style.display = 'none'; }, 4000);
+    }
+
+    function limparCamposVala() {
+        ['valaEstacaInt','valaEstacaDec','valaLarguraInt','valaLarguraDec','valaComprimentoInt','valaComprimentoDec','valaProfundidadeInt','valaProfundidadeDec'].forEach(id => setVal(id, ''));
+    }
+
+    function adicionarVala() {
+        const tipo = document.getElementById('valaTipo').value;
+        const isRecomp = (tipo === 'Recomposição Asfáltica');
+
+        const estaca = juntarValaParte('valaEstacaInt', 'valaEstacaDec');
+        const largura = juntarValaParte('valaLarguraInt', 'valaLarguraDec');
+        const comprimento = juntarValaParte('valaComprimentoInt', 'valaComprimentoDec');
+        const profundidade = isRecomp ? '' : juntarValaParte('valaProfundidadeInt', 'valaProfundidadeDec');
+
+        if (!estaca || !largura || !comprimento || (!isRecomp && !profundidade)) {
+            mostrarAlertaVala('⚠️ Preencha Estaca, Largura, Comprimento' + (isRecomp ? '' : ' e Profundidade') + ' antes de adicionar.');
+            return;
+        }
+
+        const linha = isRecomp
+            ? `${tipo} | E${estaca} - ${largura}m x ${comprimento}m`
+            : `${tipo} | E${estaca} - ${largura}m x ${comprimento}m x ${profundidade}m`;
+
+        const lista = document.getElementById('valaList');
+        const div = document.createElement('div');
+        div.className = 'vala-linha-item';
+        div.setAttribute('data-tipo', tipo);
+        div.setAttribute('data-linha', linha);
+        div.innerHTML = `<span class="vala-linha-texto">${escapeHtml(linha)}</span><button type="button" class="btn-remove vala-linha-x" onclick="this.closest('.vala-linha-item').remove()">✕</button>`;
+        lista.appendChild(div);
+
+        limparCamposVala();
+        document.getElementById('valaEstacaInt').focus();
+    }
+
+    function adicionarEstacamento(containerId, tipo) {
+        const container = document.getElementById(containerId);
+        const div = document.createElement('div');
+        div.className = 'dynamic-item';
+        div.innerHTML = `
+            <div class="dynamic-input-cell">
+                <div class="estaca-row">
+                    <div class="estaca-col"><label style="margin:0; font-size:11px;">Estaca Inicial</label><input type="text" class="${tipo}-inicial" placeholder="E5+2,00m"></div>
+                    <div class="estaca-col"><label style="margin:0; font-size:11px;">Estaca Final</label><input type="text" class="${tipo}-final" placeholder="E10+14,00m"></div>
+                </div>
+            </div>
+            <div class="dynamic-btn-cell"><button type="button" class="btn-remove" onclick="removerItem(this)">X</button></div>
+        `;
+        container.appendChild(div);
+    }
+
+    function parseEstaca(texto) {
+        if (!texto) return null;
+        let limpo = texto.toUpperCase().replace(/\s+/g, '').replace('M', '');
+        let match = limpo.match(/^E([0-9]+)\+([0-9.,]+)$/);
+        if (!match) {
+            let matchSimples = limpo.match(/^E([0-9]+)$/);
+            if(matchSimples) return parseInt(matchSimples[1], 10) * 20;
+            return null;
+        }
+        return (parseInt(match[1], 10) * 20) + parseFloat(match[2].replace(',', '.'));
+    }
+
+    function toggleEscopoTeste(selectElem) {
+        const item = selectElem.closest('.dynamic-item');
+        const escopo = selectElem.value;
+        const seccionRede = item.querySelector('.seccion-teste-rede');
+        const seccionConexion = item.querySelector('.seccion-teste-conexion');
+        
+        if (escopo === 'REDE') {
+            seccionRede.style.display = 'block';
+            seccionConexion.style.display = 'none';
+        } else {
+            seccionRede.style.display = 'none';
+            seccionConexion.style.display = 'block';
+        }
+    }
+
+    function adicionarLinhaTeste() {
+        const container = document.getElementById('testeList');
+        const div = document.createElement('div');
+        div.className = 'dynamic-item';
+        div.innerHTML = `
+            <div class="dynamic-input-cell">
+                <div class="estaca-row" style="margin-bottom: 8px;">
+                    <div class="estaca-col" style="width: 50%;">
+                        <label style="margin:0; font-size:11px;">Escopo</label>
+                        <select class="teste-escopo" onchange="toggleEscopoTeste(this)" style="margin-top:4px; padding:6px; background-color:#252525; color:#fff; border:1px solid #3d3d3d; border-radius:8px;">
+                            <option value="REDE">Rede</option>
+                            <option value="CONEXAO">Conexão</option>
+                        </select>
+                    </div>
+                    <div class="estaca-col" style="width: 50%;">
+                        <label style="margin:0; font-size:11px;">Tipo</label>
+                        <select class="teste-tipo" style="margin-top:4px; padding:6px; background-color:#252525; color:#fff; border:1px solid #3d3d3d; border-radius:8px;">
+                            <option value="Pneumático">Pneumático</option>
+                            <option value="Hidrostático">Hidrostático</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="seccion-teste-rede">
+                    <div class="estaca-row">
+                        <div class="estaca-col" style="width: 50%;">
+                            <label style="margin:0; font-size:11px;">Material</label>
+                            <select class="teste-mat" style="margin-top:4px; padding:6px; background-color:#252525; color:#fff; border:1px solid #3d3d3d; border-radius:8px;"><option value="Aço">Aço</option><option value="PE">PE</option><option value="Aço/PE">Aço/PE</option></select>
+                        </div>
+                        <div class="estaca-col" style="width: 50%;">
+                            <label style="margin:0; font-size:11px;">Diâmetro</label>
+                            <input type="text" class="teste-diam" placeholder="Ex: 4\"" style="margin-top:4px;">
+                        </div>
+                    </div>
+                    <div class="estaca-row" style="margin-top:8px;">
+                        <div class="estaca-col"><label style="margin:0; font-size:11px;">Estaca Inicial</label><input type="text" class="teste-inicial" placeholder="E3+00m" oninput="calcularMetragemTeste(this)"></div>
+                        <div class="estaca-col"><label style="margin:0; font-size:11px;">Estaca Final</label><input type="text" class="teste-final" placeholder="E4+15,00m" oninput="calcularMetragemTeste(this)"></div>
+                    </div>
+                    <div class="estaca-row" style="margin-top:8px;">
+                        <div class="estaca-col"><label style="margin:0; font-size:11px;">Pressão do Teste</label><input type="text" class="teste-pressao-rede" placeholder="Ex: 4 bar" style="margin-top:4px;"></div>
+                    </div>
+                    <div class="calc-preview">Distância: <span class="teste-calc-total-item">0,00</span>m</div>
+                </div>
+                <div class="seccion-teste-conexion" style="display: none; margin-top: 8px;">
+                    <div class="estaca-row">
+                        <div class="estaca-col" style="width: 100%;">
+                            <label style="margin:0; font-size:11px;">Tipo de Conexão</label>
+                            <input type="text" class="teste-conexao-tipo" placeholder="Ex: Selado / Acoplamento" style="margin-top:4px;">
+                        </div>
+                    </div>
+                    <div class="estaca-row" style="margin-top:8px;">
+                        <div class="estaca-col" style="width: 100%;">
+                            <label style="margin:0; font-size:11px;">Pressão do Teste</label>
+                            <input type="text" class="teste-pressao-conexion" placeholder="Ex: 7 bar" style="margin-top:4px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="dynamic-btn-cell" style="vertical-align: middle;"><button type="button" class="btn-remove" onclick="removerItem(this)">X</button></div>
+        `;
+        container.appendChild(div);
+    }
+
+    function removerItem(btn) { btn.closest('.dynamic-item').remove(); }
+    
+    function toggleObrasoftSeccion() {
+        const val = document.getElementById('realizouObrasoft').value;
+        document.getElementById('seccionObrasoftCompleta').style.display = (val === 'SIM') ? 'block' : 'none';
+    }
+
+    function obterTituloRelatorio(programa, projFinal) {
+        const projeto = (projFinal || '').trim();
+        if (programa === "SETORIZAÇÃO") {
+            return projeto || programa;
+        }
+        return projeto ? `${programa} - ${projeto}` : programa;
+    }
+
+    const SEPARADOR_RELATORIO = '────────────────────';
+
+    function tituloSecaoVala(tipo) {
+        const titulos = {
+            'Abertura': '*Abertura de vala* ',
+            'Reaterro': '*Reaterro de vala:*',
+            'Recomposição de Vala': '*Recomposição de vala:*'
+        };
+        return titulos[tipo] || `*${tipo}:*`;
+    }
+
+    function appendSecaoLista(texto, titulo, seletorInput) {
+        // Garante que o separador comece em uma linha separada (WhatsApp pode "colar" se não houver newline).
+        texto += `\n${SEPARADOR_RELATORIO}\n`;
+        texto += `*${titulo}*`;
+        document.querySelectorAll(seletorInput).forEach(i => {
+            if (i.value.trim()) {
+                texto += `\n• ${i.value.trim()}`;
+            }
+        });
+        return texto;
+    }
+
+    function formatarMetros(valor) {
+        return Number(valor).toFixed(2).replace('.', ',');
+    }
+
+    function appendAvancoFisicoTermino(texto) {
+        texto += `*AVANÇO FÍSICO / MEDIÇÃO*
+`;
+        texto += `
+`;
+
+        if (document.getElementById('hasVala') && document.getElementById('hasVala').value === "SIM") {
+            const valaItens = Array.from(document.querySelectorAll('#valaList .vala-linha-item'));
+            if (valaItens.length > 0) {
+                texto += `*Serviços de Vala:*
+`;
+                valaItens.forEach(item => {
+                    const linha = item.getAttribute('data-linha') || '';
+                    if (linha) texto += `• ${linha}
+`;
+                });
+                texto += `
+`;
+            }
+        }
+
+        if (document.getElementById('hasAssentamento').value === "SIM") {
+            const itensFuro = document.querySelectorAll('#furoList .dynamic-item');
+            if (itensFuro.length > 0) {
+                texto += `*Assentamento (MND):*
+`;
+                let subtotalFuro = 0;
+                itensFuro.forEach(item => {
+                    const { ini, fim, diff } = obterMetragemEstacaItem(item);
+                    const op = item.querySelector('.assentamento-operacao')?.value || 'Furo direcional';
+                    const mat = item.querySelector('.assentamento-material')?.value || '';
+                    const dia = item.querySelector('.assentamento-diametro')?.value || '';
+                    subtotalFuro += diff;
+                    if (ini || fim || diff > 0) {
+                        texto += `• ${op}: ${ini} -> ${fim} | ${formatarMetros(diff)}m (${mat} / ${dia})
+`;
+                    }
+                });
+                texto += `*Total:* ${formatarMetros(subtotalFuro)}m
+`;
+                texto += `
+`;
+            }
+
+            const itensDest = document.querySelectorAll('#destrutivoList .dynamic-item');
+            if (itensDest.length > 0) {
+                texto += `*Assentamento (MD):*
+`;
+                let subtotalDest = 0;
+                let cDest = 1;
+                itensDest.forEach(item => {
+                    const { ini, fim, diff } = obterMetragemEstacaItem(item);
+                    const mat = item.querySelector('.assentamento-material')?.value || '';
+                    const dia = item.querySelector('.assentamento-diametro')?.value || '';
+                    subtotalDest += diff;
+                    if (ini || fim || diff > 0) {
+                        texto += `• ${cDest}º Destrutivo: ${ini} -> ${fim} | ${formatarMetros(diff)}m (${mat} / ${dia})
+`;
+                        cDest++;
+                    }
+                });
+                texto += `*Total:* ${formatarMetros(subtotalDest)}m
+`;
+                texto += `
+`;
+            }
+        }
+
+        if (document.getElementById('hasTestePressao').value === "SIM") {
+            let primeiroTeste = true;
+            document.querySelectorAll('#testePressaoList .dynamic-item').forEach(item => {
+                if (!primeiroTeste) {
+                    texto += `
+`;
+                }
+                primeiroTeste = false;
+
+                const tipoPrincipal = item.querySelector('.t-tipo-principal')?.value || 'Rede';
+                const metodo = (item.querySelector('.t-metodo')?.value || '').toLowerCase();
+                const tempo = item.querySelector('.t-tempo')?.value || '';
+                const resultado = item.querySelector('.t-resultado')?.value || '';
+                const comentario = item.querySelector('.t-comentario-texto')?.value?.trim() || '';
+                let linhaComentario = '';
+                if (item.querySelector('.t-has-comentario')?.value === 'SIM') {
+                    linhaComentario = ` | Comentário: ${comentario}`;
+                }
+
+                if (tipoPrincipal === 'Rede') {
+                    const eIniNum = parseFloat(item.querySelector('.t-estaca-ini-num')?.value) || 0;
+                    const eIniM = parseFloat(item.querySelector('.t-estaca-ini-m')?.value) || 0;
+                    const eFimNum = parseFloat(item.querySelector('.t-estaca-fim-num')?.value) || 0;
+                    const eFimM = parseFloat(item.querySelector('.t-estaca-fim-m')?.value) || 0;
+                    const preview = item.querySelector('.t-calc-preview');
+                    let diff = preview ? parseFloat(preview.getAttribute('data-valor-calculado')) : NaN;
+                    if (isNaN(diff)) {
+                        diff = Math.abs(metrosDeEstaca(eFimNum, eFimM) - metrosDeEstaca(eIniNum, eIniM));
+                    }
+                    const estacaIni = formatarEstaca(eIniNum, eIniM);
+                    const estacaFim = formatarEstaca(eFimNum, eFimM);
+                    const mat = item.querySelector('.t-rede-material')?.value || '';
+                    const dia = item.querySelector('.t-rede-diametro')?.value || '';
+
+                    texto += `*Teste ${metodo} (Rede):*
+`;
+                    texto += `• ${estacaIni} -> ${estacaFim} | ${formatarMetros(diff)}m (${mat} / ${dia}) | Tempo: ${tempo} | *Resultado:* ${resultado}${linhaComentario}
+`;
+                } else {
+                    const conexaoTipo = item.querySelector('.t-conexao-tipo-input')?.value || '';
+                    const mat = item.querySelector('.t-conexao-material')?.value || '';
+                    const estacaConexao = obterEstacaConexaoTeste(item);
+
+                    texto += `*Teste ${metodo} (Conexão):*
+`;
+                    texto += `• Conexão: ${conexaoTipo} (${mat}) | Estaca: ${estacaConexao} | Tempo: ${tempo} | *Resultado:* ${resultado}${linhaComentario}
+`;
+                }
+            });
+        }
+
+        // Remove linhas em branco sobrando no fim da seção (evita espaçamento grande antes do separador)
+        return texto.replace(/\n+$/, '');
+    }
+
+        function appendBlocoPoccTermino(texto, poccPocs) {
+        if (!poccPocs.trim()) return texto;
+        texto += `*POCC/POCS:* ${poccPocs}
+`;
+        const atIn = document.getElementById('atendenteInicio').value || '';
+        const hoIn = document.getElementById('horaPoccInicio').value || '';
+        if (atIn || hoIn) {
+            texto += `*Horário de Início:* ${hoIn} (${atIn})
+`;
+        }
+        const atTe = document.getElementById('atendenteTermino').value || '';
+        const hoTe = document.getElementById('horaPoccTermino').value || '';
+        if (atTe || hoTe) {
+            texto += `*Horário de Término:* ${hoTe} (${atTe})
+`;
+        }
+        return texto;
+    }
+
+    function appendHorariosPocc(texto) {
+        const poccVal = document.getElementById('poccPocs').value || '';
+        return appendBlocoPoccTermino(texto, poccVal);
+    }
+
+    function appendSecaoObrasoft(texto) {
+        // Garante quebra de linha antes do divisor e também no final da seção.
+        texto += `\n${SEPARADOR_RELATORIO}\n`;
+        texto += `*INSPEÇÕES OBRASOFT*`;
+        const realizouObra = document.getElementById('realizouObrasoft').value;
+        if (realizouObra === "SIM") {
+            let itensInspecionados = 0;
+            document.querySelectorAll('.obra-checkbox:checked').forEach(i => {
+                texto += `\n• ${i.value}`;
+                itensInspecionados++;
+            });
+            document.querySelectorAll('.obra-input').forEach(i => {
+                if (i.value.trim()) {
+                    texto += `\n• ${i.value.trim()}`;
+                    itensInspecionados++;
+                }
+            });
+            if (itensInspecionados === 0) texto += `\n• Nenhuma inspeção selecionada`;
+        } else {
+            texto += `\n• Não houve`;
+        }
+        return texto;
+    }
+
+    function montarRelatorioTerminoPadrao(dados) {
+        const {
+            programa, projFinal, dataFormatada, horaJornada, tu, material, diametro,
+            pressao, endereco, contratada, supervisor, poccPocs, authStr, auditor,
+            veiculo, placa, periodo, temaCdi, hospital
+        } = dados;
+
+        const matDiam = diametro ? `${material} | ${diametro}` : material;
+
+        let texto = `*${obterTituloRelatorio(programa, projFinal)}*
+
+`;
+        texto += `*Encerramento de Jornada*
+`;
+        texto += `${SEPARADOR_RELATORIO}
+`;
+        texto += `*Data:* ${dataFormatada} | *Hora término:* ${horaJornada}
+`;
+        texto += `*Projeto:* ${projFinal}
+`;
+        texto += `*Código TU:* ${tu}
+`;
+        texto += `*Material/Diâmetro:* ${matDiam}
+`;
+        texto += `*Pressão:* ${pressao}
+`;
+        texto += `*Endereço:* ${endereco}
+`;
+        texto = appendBlocoPoccTermino(texto, poccPocs);
+        texto += `*Autorização:* ${authStr}
+`;
+        texto += `*Contratada:* ${contratada}
+`;
+        texto += `*Supervisor:* ${supervisor}
+`;
+        texto += `${SEPARADOR_RELATORIO}
+`;
+        texto += `*CDI & ROTOGRAMA*
+`;
+        texto += `*Tema CDI:* ${temaCdi}
+`;
+        texto += `*Hospital Contingência:* ${hospital}
+`;
+        texto += `${SEPARADOR_RELATORIO}
+`;
+        texto += `*DETALHAMENTO DAS ATIVIDADES*`;
+        let contAtv = 1;
+        document.querySelectorAll('.atv-input').forEach(i => {
+            if (i.value.trim()) {
+                texto += `
+${contAtv} - ${i.value.trim()}`;
+                contAtv++;
+            }
+        });
+        texto += `
+${SEPARADOR_RELATORIO}
+`;
+        texto = appendAvancoFisicoTermino(texto);
+        texto = appendSecaoLista(texto, 'OBSERVAÇÕES', '.obs-input');
+        texto = appendSecaoObrasoft(texto);
+        texto = appendSecaoLista(texto, 'NÃO CONFORMIDADES', '.nc-input');
+        texto = appendSecaoLista(texto, 'PENDÊNCIAS', '.pend-input');
+        texto += `\n${SEPARADOR_RELATORIO}\n`;
+        texto += `*DADOS DO AUDITOR*
+`;
+        texto += `*Auditor:* ${auditor}
+`;
+        texto += `*Veículo:* ${veiculo}
+`;
+        texto += `*Placa:* ${placa}
+`;
+        texto += `*Período:* ${periodo}
+`;
+        return texto;
+    }
+
+    function montarTexto() {
+        const programa = document.getElementById('programa').value;
+        const dataInput = document.getElementById('data').value;
+        const dataFormatada = dataInput ? dataInput.split('-').reverse().join('/') : '';
+        const horaJornada = document.getElementById('horaJornada').value || '';
+        
+        const contratada = document.getElementById('contratada').value;
+        const supervisor = document.getElementById('supervisor').value || '';
+        const poccPocs = document.getElementById('poccPocs').value || '';
+        const auditor = document.getElementById('auditor').value || '';
+        const placa = document.getElementById('placa').value || '';
+        const periodo = document.getElementById('periodo').value || '';
+        const veiculo = document.getElementById('veiculo').value || '';
+        const temaCdi = document.getElementById('temaCdi').value || '';
+        const hospital = document.getElementById('hospital').value || '';
+
+        const crcDataIni = document.getElementById('authCrcDataIni').value;
+        const crcDataFim = document.getElementById('authCrcDataFim').value;
+        const crcHoraIni = document.getElementById('authCrcHoraIni').value || '';
+        const crcHoraFim = document.getElementById('authCrcHoraFim').value || '';
+        
+        let authStr = '';
+        if (crcDataIni && crcDataFim) {
+            authStr = `${crcDataIni.split('-').reverse().join('/')} até ${crcDataFim.split('-').reverse().join('/')}`;
+            if (crcHoraIni || crcHoraFim) {
+                authStr += ` - das ${crcHoraIni} às ${crcHoraFim}h.`;
+            }
+        }
+
+        function formatarAutorizacaoParenteses() {
+            if (!crcDataIni || !crcDataFim) return '';
+            let s = `${crcDataIni.split('-').reverse().join('/')} até ${crcDataFim.split('-').reverse().join('/')}`;
+            if (crcHoraIni || crcHoraFim) {
+                s += ` - (${crcHoraIni} às ${crcHoraFim})`;
+            }
+            return s;
+        }
+
+        let texto = '';
+
+        if (programa === "CRC NUVEM") {
+            texto = `*${programa}*
+
+`;
+            texto += (tipoJornadaAtual === "INICIO") ? `*Início de Jornada*
+` : `*Encerramento de Jornada*
+`;
+            texto += `────────────────────
+`;
+            const cidade = document.getElementById('cidadeCrc').value || '';
+
+            if (tipoJornadaAtual === "INICIO") {
+                const chegada = document.getElementById('chegadaLocal').value || '';
+                const mpmVal = document.getElementById('mpms').value;
+
+                texto += `*Data:* ${dataFormatada} | *Hora início:* ${horaJornada}
+`;
+                texto += `*Projeto:*
+`;
+                texto += `*Contratada:* ${contratada}
+`;
+                texto += `*Supervisor:* ${supervisor}
+`;
+                texto += `*Cidade:* ${cidade}
+`;
+                texto += `*Autorização:* ${authStr}
+`;
+                texto += `*POCC/POCS:* ${poccPocs}
+`;
+                texto += `*Auditor:* ${auditor}
+`;
+                texto += `*Placa:* ${placa}
+`;
+                texto += `*Período:* ${periodo}
+`;
+                texto += `*Chegada no local:* ${chegada}
+`;
+                texto += `*Preenchido 2MPMS?:* ${mpmVal}
+`;
+                texto += `────────────────────
+`;
+                texto += `*CDI & ROTOGRAMA*
+`;
+                texto += `*Tema CDI:* ${temaCdi}
+`;
+                texto += `*Hospital Contingência:* ${hospital}
+`;
+                texto += `────────────────────
+`;
+                texto += `*CRCs PLANEJADOS PARA EXECUÇÃO*`;
+                const planejadoItens = document.querySelectorAll('#crcListPlanejados .dynamic-item');
+                if (planejadoItens.length > 0) {
+                    planejadoItens.forEach(item => {
+                        const plano = item.querySelector('.crc-plano').value;
+                        const nome = item.querySelector('.crc-nome').value || '';
+                        const equipeCrc = item.querySelector('.crc-equipe')?.value || '';
+                        const endCrc = item.querySelector('.crc-end').value || '';
+                        const prCrc = item.querySelector('.crc-pressao').value;
+                        texto += `
+- *(${plano}) - CRC:* ${nome}`;
+                        if (equipeCrc.trim()) texto += `
+*Equipe:* ${equipeCrc}`;
+                        texto += `
+*Endereço:* ${endCrc}`;
+                        texto += `
+*P. Ent./Saída:* ${prCrc}`;
+                    });
+                }
+                texto += `
+────────────────────
+`;
+                texto += `*OBSERVAÇÕES*`;
+                document.querySelectorAll('.obs-input').forEach(i => {
+                    if (i.value.trim()) texto += `
+• ${i.value.trim()}`;
+                });
+                return texto;
+            }
+
+            texto += `*Data:* ${dataFormatada} | *Hora término:* ${horaJornada}
+`;
+            texto += `*Projeto:*
+`;
+            texto += `*Contratada:* ${contratada}
+`;
+            texto += `*Supervisor:* ${supervisor}
+`;
+            texto += `*Cidade:* ${cidade}
+`;
+            texto += `*Autorização:* ${authStr}
+`;
+            texto += `*POCC/POCS:* ${poccPocs}
+`;
+            texto += `*Auditor:* ${auditor}
+`;
+            texto += `*Placa:* ${placa}
+`;
+            texto += `*Período:* ${periodo}
+`;
+            texto += `────────────────────
+`;
+            texto += `*CDI & ROTOGRAMA*
+`;
+            texto += `*Tema CDI:* ${temaCdi}
+`;
+            texto += `*Hospital Contingência:* ${hospital}
+`;
+            texto += `────────────────────
+`;
+            texto += `*CRCs RENOVADOS*`;
+            document.querySelectorAll('#crcList .dynamic-item').forEach(item => {
+                const tag = item.querySelector('.crc-tag').value || '';
+                const equipeCrc = item.querySelector('.crc-equipe')?.value || '';
+                const serie = item.querySelector('.crc-serie').value || '';
+                const fab = item.querySelector('.crc-fab').value || '';
+                const ano = item.querySelector('.crc-ano').value || '';
+                const reg = item.querySelector('.crc-reg').value || '';
+                const shut = item.querySelector('.crc-shut').value || '';
+                const vazao = item.querySelector('.crc-vazao').value || '';
+                const pressao = item.querySelector('.crc-pressao').value;
+                const recomp = item.querySelector('.crc-recomp').value;
+                const end = item.querySelector('.crc-end').value || '';
+                const hIni = item.querySelector('.crc-h-ini').value || '';
+                const hFim = item.querySelector('.crc-h-fim').value || '';
+
+                texto += `
+- *CRC:* ${tag}`;
+                if (equipeCrc.trim()) texto += `
+*Equipe:* ${equipeCrc}`;
+                texto += `
+*Série:* ${serie}
+`;
+                texto += `*Fabricante:* ${fab}
+`;
+                texto += `*Ano Fabricação:* ${ano}
+`;
+                texto += `*Mod. Regulador:* ${reg}
+`;
+                texto += `*Mod. Shut-off:* ${shut}
+`;
+                texto += `*Vazão:* ${vazao}
+`;
+                texto += `*P. Ent./Saída:* ${pressao}
+`;
+                texto += `*Recomposição:* ${recomp}
+`;
+                texto += `*Endereço:* ${end}
+`;
+                texto += `*Hora início:* ${hIni}
+`;
+                texto += `*Hora término:* ${hFim}
+`;
+            });
+            texto = appendSecaoObrasoft(texto);
+            texto += `
+────────────────────
+`;
+            texto += `*NÃO CONFORMIDADES*`;
+            document.querySelectorAll('.nc-input').forEach(i => {
+                if (i.value.trim()) texto += `
+• ${i.value.trim()}`;
+            });
+            texto += `
+────────────────────
+`;
+            texto += `*OBSERVAÇÕES*`;
+            document.querySelectorAll('.obs-input').forEach(i => {
+                if (i.value.trim()) texto += `
+• ${i.value.trim()}`;
+            });
+            return texto;
+
+        } else {
+            const selectProj = document.getElementById('projeto').value;
+            const projFinal = (selectProj === "MANUAL") ? (document.getElementById('projetoManual').value || '') : (selectProj || '');
+            const material = document.getElementById('material').value;
+            const diametro = document.getElementById('diametro').value || '';
+            const pressao = document.getElementById('pressao').value || '';
+            const tu = document.getElementById('tu').value || '';
+            const endereco = document.getElementById('endereco').value || '';
+
+            if (tipoJornadaAtual === "INICIO") {
+                const chegada = document.getElementById('chegadaLocal').value || '';
+                const mpmVal = document.getElementById('mpms').value;
+                const authInicio = formatarAutorizacaoParenteses();
+
+                texto = `*${obterTituloRelatorio(programa, projFinal)}*
+
+`;
+                texto += `*Início de Jornada*
+`;
+                texto += `────────────────────
+`;
+                texto += `*Data:* ${dataFormatada} | *Hora início:* ${horaJornada}
+`;
+                texto += `*Projeto:* ${projFinal}
+`;
+                texto += `*Código TU:* ${tu}
+`;
+                texto += `*Material/Diâmetro:* ${material}${diametro ? ' | ' + diametro : ''}
+`;
+                texto += `*Pressão:* ${pressao}
+`;
+                texto += `*Endereço:* ${endereco}
+`;
+                texto += `*Contratada:* ${contratada}
+`;
+                texto += `*Supervisor:* ${supervisor}
+`;
+                texto += `*POCC/POCS:* ${poccPocs}
+`;
+                texto = appendHorariosPocc(texto);
+                texto += `*Autorização:* ${authInicio}
+`;
+                texto += `*Auditor:* ${auditor}
+`;
+                texto += `*Veículo:* ${veiculo}
+`;
+                texto += `*Placa:* ${placa}
+`;
+                texto += `*Período:* ${periodo}
+`;
+                texto += `*Chegada no local:* ${chegada}
+`;
+                texto += `*Preenchido 2MPMS?:* ${mpmVal}
+`;
+                texto += `────────────────────
+`;
+                texto += `*CDI & ROTOGRAMA*
+`;
+                texto += `*Tema CDI:* ${temaCdi}
+`;
+                texto += `*Hospital Contingência:* ${hospital}
+`;
+                texto += `────────────────────
+`;
+                texto += `*ATIVIDADES PROGRAMADAS*`;
+                let contAtv = 1;
+                document.querySelectorAll('.atv-inicio-input').forEach(i => {
+                    if (i.value.trim()) {
+                        texto += `
+${contAtv} - ${i.value.trim()}`;
+                        contAtv++;
+                    }
+                });
+                texto += `
+────────────────────
+`;
+                texto += `*OBSERVAÇÕES*`;
+                document.querySelectorAll('.obs-input').forEach(i => {
+                    if (i.value.trim()) texto += `
+• ${i.value.trim()}`;
+                });
+                return texto;
+            }
+
+            return montarRelatorioTerminoPadrao({
+                programa, projFinal, dataFormatada, horaJornada, tu, material, diametro,
+                pressao, endereco, contratada, supervisor, poccPocs, authStr, auditor,
+                veiculo, placa, periodo, temaCdi, hospital
+            });
+        }
+
+        if (tipoJornadaAtual !== "TERMINO") {
+            return texto;
+        }
+
+        return texto;
+    }
+
+    function enviarWhatsApp() {
+        if (!validarEReportarObrigatorios()) return;
+        try {
+            window.open(`https://wa.me/?text=${encodeURIComponent(montarTexto())}`, '_blank');
+        } catch (e) {
+            alert('Erro ao gerar o relatório. Verifique os campos preenchidos e tente novamente.');
+            console.error(e);
+        }
+    }
+
+    function copiarTexto() {
+        if (!validarEReportarObrigatorios()) return;
+        try {
+            navigator.clipboard.writeText(montarTexto()).then(function() {
+                mostrarAlerta('✓ Pronto! RDO copiado para a área de transferência.');
+            });
+        } catch (e) {
+            alert('Erro ao gerar o relatório. Verifique os campos preenchidos e tente novamente.');
+            console.error(e);
+        }
+    }
+
+    /* =========================================================
+       PERSISTÊNCIA DE REPORTES
+       ---------------------------------------------------------
+       "Banco de dados" local do app (localStorage). Cada reporte
+       é um objeto com: id, createdAt (timestamp), obra/projeto,
+       todos os campos do formulário, as listas dinâmicas e o
+       texto já formatado para o WhatsApp.
+
+       Para migrar para um backend no futuro, basta trocar
+       lerReportes()/gravarReportes() por chamadas fetch() à API
+       (o "model" abaixo já é o contrato/estrutura da tabela).
+       ========================================================= */
+    const REPORTES_STORAGE_KEY = 'reportesBV_v1';
+
+    function lerReportes() {
+        try { return JSON.parse(localStorage.getItem(REPORTES_STORAGE_KEY)) || []; }
+        catch (e) { return []; }
+    }
+
+    function gravarReportes(lista) {
+        localStorage.setItem(REPORTES_STORAGE_KEY, JSON.stringify(lista));
+        atualizarContadorHistorico();
+    }
+
+    function gerarId() {
+        return 'r_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+    }
+
+    function obterObraAtual() {
+        const programa = document.getElementById('programa').value;
+        if (programa === 'CRC NUVEM') {
+            const cidade = (document.getElementById('cidadeCrc').value || '').trim();
+            return cidade ? `CRC NUVEM - ${cidade}` : 'CRC NUVEM';
+        }
+        const sel = document.getElementById('projeto').value;
+        const proj = (sel === 'MANUAL')
+            ? (document.getElementById('projetoManual').value || '').trim()
+            : (sel || '').trim();
+        return proj || programa;
+    }
+
+    function coletarTextareas(seletor) {
+        return Array.from(document.querySelectorAll(seletor))
+            .map(i => (i.value || '').trim())
+            .filter(v => v);
+    }
+
+    // Estrutura/model de um reporte salvo (uma "linha" da tabela).
+    function coletarDadosReporte() {
+        const campos = {};
+        document.querySelectorAll('#rdoForm [id]').forEach(el => {
+            if (['INPUT', 'SELECT', 'TEXTAREA'].includes(el.tagName)) {
+                campos[el.id] = el.value;
+            }
+        });
+
+        const listas = {
+            atividadesProgramadas: coletarTextareas('.atv-inicio-input'),
+            atividadesExecutadas: coletarTextareas('.atv-input'),
+            observacoes: coletarTextareas('.obs-input'),
+            naoConformidades: coletarTextareas('.nc-input'),
+            pendencias: coletarTextareas('.pend-input'),
+            obrasoftSelecionados: Array.from(document.querySelectorAll('.obra-checkbox:checked')).map(c => c.value),
+            obrasoftCustom: coletarTextareas('.obra-input'),
+            houveVala: document.getElementById('hasVala')?.value || 'NÃO',
+            valas: Array.from(document.querySelectorAll('#valaList .vala-linha-item')).map(it => ({
+                tipo: it.getAttribute('data-tipo') || '',
+                linha: it.getAttribute('data-linha') || ''
+            })),
+            assentamentoMND: Array.from(document.querySelectorAll('#furoList .dynamic-item')).map(it => ({
+                operacao: it.querySelector('.assentamento-operacao')?.value || '',
+                material: it.querySelector('.assentamento-material')?.value || '',
+                diametro: it.querySelector('.assentamento-diametro')?.value || '',
+                metragem: it.querySelector('.calc-preview')?.getAttribute('data-valor-calculado') || '0'
+            })),
+            assentamentoMD: Array.from(document.querySelectorAll('#destrutivoList .dynamic-item')).map(it => ({
+                material: it.querySelector('.assentamento-material')?.value || '',
+                diametro: it.querySelector('.assentamento-diametro')?.value || '',
+                metragem: it.querySelector('.calc-preview')?.getAttribute('data-valor-calculado') || '0'
+            })),
+            testesPressao: Array.from(document.querySelectorAll('#testePressaoList .dynamic-item')).map(it => ({
+                tipo: it.querySelector('.t-tipo-principal')?.value || '',
+                metodo: it.querySelector('.t-metodo')?.value || '',
+                tempo: it.querySelector('.t-tempo')?.value || '',
+                resultado: it.querySelector('.t-resultado')?.value || ''
+            })),
+            crcPlanejados: Array.from(document.querySelectorAll('#crcListPlanejados .dynamic-item')).map(it => ({
+                plano: it.querySelector('.crc-plano')?.value || '',
+                nome: it.querySelector('.crc-nome')?.value || '',
+                endereco: it.querySelector('.crc-end')?.value || '',
+                pressao: it.querySelector('.crc-pressao')?.value || ''
+            })),
+            crcRenovados: Array.from(document.querySelectorAll('#crcList .dynamic-item')).map(it => ({
+                tag: it.querySelector('.crc-tag')?.value || '',
+                serie: it.querySelector('.crc-serie')?.value || '',
+                fabricante: it.querySelector('.crc-fab')?.value || '',
+                ano: it.querySelector('.crc-ano')?.value || '',
+                regulador: it.querySelector('.crc-reg')?.value || '',
+                shutoff: it.querySelector('.crc-shut')?.value || '',
+                vazao: it.querySelector('.crc-vazao')?.value || '',
+                pressao: it.querySelector('.crc-pressao')?.value || '',
+                recomposicao: it.querySelector('.crc-recomp')?.value || '',
+                endereco: it.querySelector('.crc-end')?.value || '',
+                horaInicio: it.querySelector('.crc-h-ini')?.value || '',
+                horaTermino: it.querySelector('.crc-h-fim')?.value || ''
+            }))
+        };
+
+        return {
+            id: gerarId(),
+            createdAt: new Date().toISOString(),
+            tipoJornada: tipoJornadaAtual,
+            programa: document.getElementById('programa').value,
+            obra: obterObraAtual(),
+            data: document.getElementById('data').value || '',
+            hora: document.getElementById('horaJornada').value || '',
+            textoWhatsApp: montarTexto(),
+            campos: campos,
+            listas: listas
+        };
+    }
+
+    function salvarReporte() {
+        if (!validarEReportarObrigatorios()) return;
+        try {
+            const reporte = coletarDadosReporte();
+            const lista = lerReportes();
+            lista.push(reporte);
+            gravarReportes(lista);
+            mostrarAlerta(`✓ Reporte salvo no histórico — Obra: ${reporte.obra || 'N/D'}`);
+        } catch (e) {
+            alert('Erro ao salvar o reporte. Verifique os campos e tente novamente.');
+            console.error(e);
+        }
+    }
+
+    function mostrarAlerta(msg) {
+        const ab = document.getElementById('alertBox');
+        if (!ab) return;
+        ab.textContent = msg;
+        ab.style.display = 'block';
+        clearTimeout(window.__alertTimer);
+        window.__alertTimer = setTimeout(() => { ab.style.display = 'none'; }, 4000);
+    }
+
+    /* ===================== NAVEGAÇÃO ENTRE VIEWS ===================== */
+    function mostrarView(view) {
+        const mapa = {
+            GERADOR:   { v: 'viewGerador',   n: 'navGerador' },
+            OBRAS:     { v: 'viewObras',     n: 'navObras' },
+            HISTORICO: { v: 'viewHistorico', n: 'navHistorico' }
+        };
+        if (!mapa[view]) view = 'GERADOR';
+
+        Object.keys(mapa).forEach(k => {
+            const v = document.getElementById(mapa[k].v);
+            const n = document.getElementById(mapa[k].n);
+            if (v) v.style.display = (k === view) ? 'block' : 'none';
+            if (n) n.classList.toggle('active', k === view);
+        });
+
+        const hashAlvo = view === 'HISTORICO' ? 'historico' : (view === 'OBRAS' ? 'obras' : '');
+        if (hashAlvo) {
+            if (location.hash !== '#' + hashAlvo) location.hash = hashAlvo;
+        } else if (location.hash) {
+            history.replaceState(null, '', location.pathname + location.search);
+        }
+
+        if (view === 'HISTORICO') renderHistorico();
+        else if (view === 'OBRAS') renderObras();
+    }
+
+    function atualizarContadorHistorico() {
+        const badge = document.getElementById('histCount');
+        if (badge) badge.textContent = lerReportes().length;
+    }
+
+    /* ===================== RENDERIZAÇÃO DO HISTÓRICO ===================== */
+    function formatarDataHoraSalvo(iso) {
+        const d = new Date(iso);
+        if (isNaN(d.getTime())) return '';
+        const p = n => String(n).padStart(2, '0');
+        return `${p(d.getDate())}/${p(d.getMonth() + 1)}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`;
+    }
+
+    function escapeHtml(s) {
+        return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function renderHistorico() {
+        const cont = document.getElementById('histLista');
+        const vazio = document.getElementById('histVazio');
+        if (!cont) return;
+
+        const termo = (document.getElementById('histBusca')?.value || '').toLowerCase().trim();
+        let lista = lerReportes();
+
+        if (termo) {
+            lista = lista.filter(r =>
+                (r.obra || '').toLowerCase().includes(termo) ||
+                (r.programa || '').toLowerCase().includes(termo) ||
+                (r.data || '').toLowerCase().includes(termo) ||
+                (r.textoWhatsApp || '').toLowerCase().includes(termo)
+            );
+        }
+
+        if (lista.length === 0) {
+            cont.innerHTML = '';
+            vazio.style.display = 'block';
+            vazio.innerHTML = termo
+                ? 'Nenhum reporte encontrado para a busca.'
+                : 'Nenhum reporte salvo ainda.<br>Preencha um reporte no Gerador e toque em <b>“💾 Salvar Reporte no Histórico”</b>.';
+            return;
+        }
+        vazio.style.display = 'none';
+
+        // Agrupa por obra/projeto
+        const grupos = {};
+        lista.forEach(r => {
+            const obra = r.obra || 'Sem obra';
+            (grupos[obra] = grupos[obra] || []).push(r);
+        });
+
+        const obrasOrdenadas = Object.keys(grupos).sort((a, b) => a.localeCompare(b, 'pt-BR'));
+        let html = '';
+
+        obrasOrdenadas.forEach(obra => {
+            const itens = grupos[obra].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            html += `<div class="hist-grupo">
+                <div class="hist-grupo-titulo"><span>📍 ${escapeHtml(obra)}</span><span class="hist-grupo-count">${itens.length}</span></div>`;
+            itens.forEach(r => {
+                const ini = r.tipoJornada === 'INICIO';
+                const jornadaLabel = ini ? '🌅 Início' : '🌌 Término';
+                html += `<div class="hist-card">
+                    <div class="hist-card-head" onclick="toggleCard(this)">
+                        <div class="hist-card-info">
+                            <span class="hist-badge-jornada ${ini ? 'ini' : 'term'}">${jornadaLabel}</span>
+                            <span class="hist-card-data">${escapeHtml(r.data || '')}${r.hora ? ' • ' + escapeHtml(r.hora) : ''}</span>
+                            <span class="hist-card-prog">${escapeHtml(r.programa || '')}</span>
+                        </div>
+                        <span class="hist-card-seta">▼</span>
+                    </div>
+                    <div class="hist-card-body">
+                        <div class="hist-card-meta">Salvo em ${formatarDataHoraSalvo(r.createdAt)}</div>
+                        <pre class="hist-texto">${escapeHtml(r.textoWhatsApp || '')}</pre>
+                        <div class="hist-card-acoes">
+                            <button type="button" class="btn-hist-copy" onclick="copiarReporteHistorico('${r.id}', this)">📋 Copiar para o WhatsApp</button>
+                            <button type="button" class="btn-hist-wa" onclick="enviarReporteHistoricoWa('${r.id}')">🚀 Enviar</button>
+                            <button type="button" class="btn-hist-del" onclick="excluirReporte('${r.id}')">🗑️</button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            html += `</div>`;
+        });
+
+        cont.innerHTML = html;
+    }
+
+    function toggleCard(head) {
+        head.closest('.hist-card').classList.toggle('aberto');
+    }
+
+    function obterReportePorId(id) {
+        return lerReportes().find(r => r.id === id);
+    }
+
+    function copiarReporteHistorico(id, btn) {
+        const r = obterReportePorId(id);
+        if (!r) return;
+        navigator.clipboard.writeText(r.textoWhatsApp || '').then(() => {
+            const orig = btn.textContent;
+            btn.textContent = '✓ Copiado!';
+            setTimeout(() => { btn.textContent = orig; }, 2000);
+        });
+    }
+
+    function enviarReporteHistoricoWa(id) {
+        const r = obterReportePorId(id);
+        if (!r) return;
+        window.open(`https://wa.me/?text=${encodeURIComponent(r.textoWhatsApp || '')}`, '_blank');
+    }
+
+    function excluirReporte(id) {
+        if (!confirm('Excluir este reporte do histórico? Esta ação não pode ser desfeita.')) return;
+        gravarReportes(lerReportes().filter(r => r.id !== id));
+        renderHistorico();
+    }
+
+    function viewDoHash() {
+        if (location.hash === '#historico') return 'HISTORICO';
+        if (location.hash === '#obras') return 'OBRAS';
+        return 'GERADOR';
+    }
+    function inicializarHistorico() {
+        atualizarContadorHistorico();
+        atualizarContadorObras();
+        renderObras();
+        const v = viewDoHash();
+        if (v !== 'GERADOR') mostrarView(v);
+    }
+    window.addEventListener('hashchange', () => {
+        mostrarView(viewDoHash());
+    });
+
+    /* ===================== MINHAS OBRAS (cadastro local) ===================== */
+    const OBRAS_STORAGE_KEY = 'obrasBV_v1';
+
+    function lerObras() {
+        try { return JSON.parse(localStorage.getItem(OBRAS_STORAGE_KEY)) || []; }
+        catch (e) { return []; }
+    }
+    function gravarObras(lista) {
+        localStorage.setItem(OBRAS_STORAGE_KEY, JSON.stringify(lista));
+        atualizarContadorObras();
+    }
+    function atualizarContadorObras() {
+        const b = document.getElementById('obrasCount');
+        if (b) b.textContent = lerObras().length;
+    }
+    function escAttr(s) {
+        return (s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function setVal(id, v) {
+        const el = document.getElementById(id);
+        if (el) el.value = (v == null ? '' : v);
+    }
+    // Define o valor de um <select>, criando a opção caso ela não exista.
+    function definirSelectComValor(id, valor, tagCustom) {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+        const v = (valor || '').trim();
+        if (!v) return;
+        let opt = Array.from(sel.options).find(o => o.value === v);
+        if (!opt) {
+            opt = new Option(v, v);
+            if (tagCustom) opt.setAttribute('data-obra-custom', '1');
+            sel.add(opt);
+        }
+        sel.value = v;
+    }
+    function removerOpcoesObraCustom() {
+        ['material', 'contratada'].forEach(id => {
+            const sel = document.getElementById(id);
+            if (sel) Array.from(sel.querySelectorAll('option[data-obra-custom="1"]')).forEach(o => o.remove());
+        });
+    }
+
+    function preencherGeradorComObra(obra) {
+        removerOpcoesObraCustom();
+        setVal('tu', obra.tu);
+        // Material e Diâmetro distintos (com compatibilidade p/ obras antigas em "materialDiametro")
+        const matObra = (obra.material || obra.materialDiametro || '').trim();
+        if (matObra) definirSelectComValor('material', matObra, true);
+        setVal('diametro', obra.diametro || '');
+        setVal('pressao', obra.pressao);
+        setVal('endereco', obra.endereco);
+        definirSelectComValor('contratada', obra.contratada, true);
+        setVal('supervisor', obra.supervisor);
+        setVal('authCrcDataIni', obra.authDataIni);
+        setVal('authCrcDataFim', obra.authDataFim);
+        setVal('authCrcHoraIni', obra.authHoraIni);
+        setVal('authCrcHoraFim', obra.authHoraFim);
+        setVal('auditor', obra.auditor);
+        setVal('veiculo', obra.veiculo);
+        setVal('placa', obra.placa);
+        setVal('hospital', obra.hospital);
+    }
+
+    function lerFormObra() {
+        const get = id => (document.getElementById(id)?.value || '').trim();
+        return {
+            nome: get('obraNome'),
+            tu: get('obraTu'),
+            material: document.getElementById('obraMaterial')?.value || '',
+            diametro: get('obraDiametro'),
+            pressao: get('obraPressao'),
+            endereco: get('obraEndereco'),
+            contratada: get('obraContratada'),
+            supervisor: get('obraSupervisor'),
+            authDataIni: document.getElementById('obraAuthDataIni')?.value || '',
+            authDataFim: document.getElementById('obraAuthDataFim')?.value || '',
+            authHoraIni: document.getElementById('obraAuthHoraIni')?.value || '',
+            authHoraFim: document.getElementById('obraAuthHoraFim')?.value || '',
+            auditor: get('obraAuditor'),
+            veiculo: get('obraVeiculo'),
+            placa: get('obraPlaca'),
+            hospital: get('obraHospital')
+        };
+    }
+
+    function limparFormObra() {
+        ['obraNome','obraTu','obraDiametro','obraPressao','obraEndereco','obraContratada','obraSupervisor','obraAuthDataIni','obraAuthDataFim','obraAuthHoraIni','obraAuthHoraFim','obraAuditor','obraVeiculo','obraPlaca','obraHospital'].forEach(id => setVal(id, ''));
+        const m = document.getElementById('obraMaterial'); if (m) m.value = 'Aço/PE';
+    }
+
+    function mostrarAlertaObra(msg, erro) {
+        const a = document.getElementById('obraAlert');
+        if (!a) return;
+        a.textContent = msg;
+        a.style.display = 'block';
+        a.style.backgroundColor = erro ? '#4a1e1e' : '#1e4620';
+        a.style.color = erro ? '#f0a9a9' : '#a3cfbb';
+        a.style.borderColor = erro ? '#7a2e2e' : '#2e6930';
+        clearTimeout(window.__obraAlertTimer);
+        window.__obraAlertTimer = setTimeout(() => { a.style.display = 'none'; }, 4000);
+    }
+
+    function salvarObra() {
+        const obra = lerFormObra();
+        if (!obra.nome) {
+            mostrarAlertaObra('⚠️ Informe ao menos o Nome do Projeto para salvar a obra.', true);
+            document.getElementById('obraNome').focus();
+            return;
+        }
+        obra.id = 'o_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 6);
+        obra.createdAt = new Date().toISOString();
+        const lista = lerObras();
+        lista.push(obra);
+        gravarObras(lista);
+        limparFormObra();
+        renderObras();
+        carregarProjetos();   // atualiza o dropdown do Gerador imediatamente
+        mostrarAlertaObra(`✓ Obra "${obra.nome}" cadastrada!`, false);
+    }
+
+    function excluirObra(id) {
+        const obra = lerObras().find(o => o.id === id);
+        if (!confirm(`Excluir a obra "${obra ? obra.nome : ''}"? Esta ação não pode ser desfeita.`)) return;
+        gravarObras(lerObras().filter(o => o.id !== id));
+        renderObras();
+        carregarProjetos();
+    }
+
+    function formatarAutObra(o) {
+        if (!o.authDataIni && !o.authDataFim) return '';
+        const d = s => s ? s.split('-').reverse().join('/') : '';
+        let s = `${d(o.authDataIni)}${o.authDataFim ? ' até ' + d(o.authDataFim) : ''}`;
+        if (o.authHoraIni || o.authHoraFim) s += ` (${o.authHoraIni} às ${o.authHoraFim})`;
+        return s.trim();
+    }
+
+    function renderObras() {
+        const cont = document.getElementById('obrasListaCadastro');
+        const vazio = document.getElementById('obrasVazio');
+        if (!cont) return;
+        atualizarContadorObras();
+        const lista = lerObras().slice().sort((a, b) => (a.nome || '').localeCompare(b.nome || '', 'pt-BR'));
+        if (lista.length === 0) {
+            cont.innerHTML = '';
+            if (vazio) vazio.style.display = 'block';
+            return;
+        }
+        if (vazio) vazio.style.display = 'none';
+        cont.innerHTML = lista.map(o => {
+            const linhas = [];
+            if (o.tu) linhas.push(`<b>TU:</b> ${escapeHtml(o.tu)}`);
+            if (o.material) linhas.push(`<b>Material:</b> ${escapeHtml(o.material)}`);
+            if (o.diametro) linhas.push(`<b>Diâmetro:</b> ${escapeHtml(o.diametro)}`);
+            if (!o.material && !o.diametro && o.materialDiametro) linhas.push(`<b>Material/Diâmetro:</b> ${escapeHtml(o.materialDiametro)}`);
+            if (o.pressao) linhas.push(`<b>Pressão:</b> ${escapeHtml(o.pressao)}`);
+            if (o.endereco) linhas.push(`<b>Endereço:</b> ${escapeHtml(o.endereco)}`);
+            if (o.contratada) linhas.push(`<b>Contratada:</b> ${escapeHtml(o.contratada)}`);
+            if (o.supervisor) linhas.push(`<b>Supervisor:</b> ${escapeHtml(o.supervisor)}`);
+            const auth = formatarAutObra(o);
+            if (auth) linhas.push(`<b>Autorização:</b> ${escapeHtml(auth)}`);
+            if (o.auditor) linhas.push(`<b>Auditor:</b> ${escapeHtml(o.auditor)}`);
+            if (o.veiculo || o.placa) linhas.push(`<b>Veículo:</b> ${escapeHtml(o.veiculo || '')}${o.placa ? ' (' + escapeHtml(o.placa) + ')' : ''}`);
+            if (o.hospital) linhas.push(`<b>Hospital:</b> ${escapeHtml(o.hospital)}`);
+            return `<div class="obra-card">
+                <div class="obra-card-head">
+                    <span class="obra-card-nome">🏗️ ${escapeHtml(o.nome)}</span>
+                    <button type="button" class="btn-obra-del" onclick="excluirObra('${o.id}')">🗑️ Excluir</button>
+                </div>
+                <div class="obra-card-corpo">${linhas.join('<br>') || '<i>Sem dados adicionais</i>'}</div>
+            </div>`;
+        }).join('');
+    }
+
+    /* ===================== TEMA DIA / NOITE ===================== */
+    const TEMA_STORAGE_KEY = 'temaBV';
+
+    function aplicarTema(tema) {
+        const btn = document.getElementById('btnTema');
+        if (tema === 'dia') {
+            document.body.classList.add('tema-dia');
+            if (btn) btn.textContent = '🌙 Modo Noturno';
+        } else {
+            document.body.classList.remove('tema-dia');
+            if (btn) btn.textContent = '☀️ Modo Dia';
+        }
+    }
+
+    function alternarTema() {
+        const novo = document.body.classList.contains('tema-dia') ? 'noite' : 'dia';
+        try { localStorage.setItem(TEMA_STORAGE_KEY, novo); } catch (e) {}
+        aplicarTema(novo);
+    }
+
+    function inicializarTema() {
+        let tema = 'noite';
+        try { tema = localStorage.getItem(TEMA_STORAGE_KEY) || 'noite'; } catch (e) {}
+        aplicarTema(tema);
+    }
+
+    /* ===================== VALIDAÇÃO DE CAMPOS OBRIGATÓRIOS ===================== */
+    // Um campo só é exigido se estiver VISÍVEL no contexto atual (programa + jornada).
+    function campoEstaVisivel(el) {
+        return !!(el && el.offsetParent !== null);
+    }
+
+    function obterCamposObrigatorios() {
+        // Ordem segue a ordem visual do formulário (para focar o 1º vazio).
+        return [
+            ['projeto', 'Projeto'],
+            ['projetoManual', 'Nome do Projeto Manual'],
+            ['data', 'Data'],
+            ['horaJornada', tipoJornadaAtual === 'INICIO' ? 'Hora início' : 'Hora término'],
+            ['contratada', 'Contratada'],
+            ['supervisor', 'Supervisor'],
+            ['material', 'Material'],
+            ['diametro', 'Diâmetro'],
+            ['tu', 'Código TU'],
+            ['cidadeCrc', 'Cidade'],
+            ['chegadaLocal', 'Chegada no local']
+        ];
+    }
+
+    function validarObrigatorios() {
+        for (const [id, rotulo] of obterCamposObrigatorios()) {
+            const el = document.getElementById(id);
+            if (!el || !campoEstaVisivel(el)) continue;   // ignora campos ocultos no contexto
+            if (!(el.value || '').trim()) {
+                return { ok: false, el: el, rotulo: rotulo };
+            }
+        }
+        return { ok: true };
+    }
+
+    function validarEReportarObrigatorios() {
+        const r = validarObrigatorios();
+        if (r.ok) return true;
+        abrirModalObrigatorios(r.rotulo, r.el);
+        return false;
+    }
+
+    function abrirModalObrigatorios(rotulo, el) {
+        const txt = document.getElementById('modalObrigatoriosTexto');
+        if (txt) {
+            txt.innerHTML = 'Por favor, preencha todos os campos obrigatórios antes de continuar!' +
+                (rotulo ? `<br><br>Campo pendente: <b>${rotulo}</b>` : '');
+        }
+        const m = document.getElementById('modalObrigatorios');
+        if (m) m.style.display = 'flex';
+        window.__campoPendente = el || null;
+    }
+
+    function fecharModalObrigatorios() {
+        const m = document.getElementById('modalObrigatorios');
+        if (m) m.style.display = 'none';
+        const el = window.__campoPendente;
+        window.__campoPendente = null;
+        if (el) {
+            try {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.focus({ preventScroll: true });
+            } catch (e) {
+                el.focus();
+            }
+        }
+    }
+</script>
+
+
+</body></html>
